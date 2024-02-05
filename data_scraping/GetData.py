@@ -130,7 +130,7 @@ def order_soup(url):
 if __name__ == "__main__":
     
     # Pass get_bpa_data a directory if given on the cli, else just run it w/ the default dir
-    if sys.argv[1]:
+    if len(sys.argv) > 1:
         dir = sys.argv[1]
         dir = dir.replace('\\','\\\\')
         get_bpa_data(directory=dir)
