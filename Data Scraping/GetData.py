@@ -5,6 +5,7 @@
 
 from bs4 import BeautifulSoup # For scraping data from web contents
 from urllib.request import urlopen # For grabbing data from the web
+import ssl
 import datetime # For data that can reliably be grabbed up to a current data, this is used to keep the date current
 import pandas as pd # For saving data to a csv format
 
@@ -21,25 +22,26 @@ def get_bpa_data(merge_tables=False):
         url = BASE_URL_BPA + str(year) + ".htm"
         bpa_soup = order_soup(url)
 
-        tables = []
+        tables = {}
+        # Pages have multiple tables. this breaks down the webpage into the seperate tables
         for label in bpa_soup.find_all("div", class_ = "tablelabel"):
-            print(label.get_text)
+            print(print(type(label)))
             values = []
             for sibling in label.find_next_siblings():
                 if sibling.name == "tablelabel":  # iterate through siblings until separator is encoutnered
                     break
                 values.append(sibling)
-            tables.append(values)
-
-        for table in tables:
-            # We create a table for each year, and then merge them all at the end if desired to prevent any issues arising from 
-            # different years having different headers
+            tables[label.text] = values
+        print(tables.keys())
+        for key in tables:
+            table = tables[key][0]
+    
             table_header_html = table.find_all('th')
             tables_headers = []
             for header in table_header_html:
                 tables_headers.append(header.get_text())
-        
-            table_row_html = bpa_soup.find_all('tr')
+            
+            table_row_html = table.find_all('tr')
             tables_rows = []
             for row_html in table_row_html:
                 row = []
@@ -47,6 +49,9 @@ def get_bpa_data(merge_tables=False):
                     row.append(data.get_text())
                 tables_rows.append(row)  
             
+            filename = str(year) + " " + key + " data"
+            
+            SaveDataToCSV(tables_rows,tables_headers,filename)  
             
 
 
@@ -54,17 +59,25 @@ def get_bpa_data(merge_tables=False):
         
     return "BPA data was accquired successfully!"
 
-#
-def SaveData(rows, cols, filename):
+# forces file names to be a lowercase, snake-cased format
+def CleanFileName(filename):
+    clean_filename = filename.lower()
+    clean_filename = filename.replace(' ','_') 
+    return clean_filename
+
+def SaveDataToCSV(rows, cols, filename):
     # Ensure the filename has a .csv extenstion if it doesn't already
     if filename[-4:] != ".csv":
         filename = filename + ".csv"
-    df = pd.DataFrame(rows, columns = cols)
+    df = pd.DataFrame(rows, columns = cols, index=False) # index = false removes the index col from the data
     df.to_csv(filename)
 
 # Gets the soup version of a webpage from a passed url string
 def order_soup(url):
-    html = urlopen(url).read()
+    ### I was getting an error trying to call the url about a messed up SSL cert, and this context is turning off the security to
+    ### fix the bug. As asuch this should probably be removed at some point
+    context = ssl._create_unverified_context()
+    html = urlopen(url,context=context)
     soup = BeautifulSoup(html, features="html.parser")
     return soup
 
