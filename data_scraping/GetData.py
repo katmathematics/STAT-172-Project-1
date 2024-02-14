@@ -21,7 +21,7 @@ import glob
 # Collects data from the Bonneville Power Administration website
 # Ideally we'd like to be able to merge the tables within this step, but for now merge_tables is an unused variable
 # Additionally passing a file directory would be good
-def get_bpa_data(merge_tables=False,directory="data\\web_data"):
+def get_bpa_data(merge_tables=False,directory="data\\web_data\\bpa_data"):
 
     START_YEAR_BPA = 1999
     BASE_URL_BPA = "https://transmission.bpa.gov/Business/Operations/Outages/OutagesCY"
@@ -68,9 +68,9 @@ def get_bpa_data(merge_tables=False,directory="data\\web_data"):
                    
     return "BPA data was accquired successfully!"
 
-# Gets data about storms from the national centers for environmental information
+# Gets data about storms from the national centers for environmental information about lightning strikes
 def get_ncei_data(directory="data\\web_data\\ncei_data"):
-    START_YEAR_NCEI = 1986
+    START_YEAR_NCEI = 1990
     BASE_URL_NCEI = "https://www.ncei.noaa.gov/pub/data/swdi/database-csv/v2/"
     RETRIEVE_FILE_ROOT = "nldn-tiles-"
 
@@ -81,16 +81,11 @@ def get_ncei_data(directory="data\\web_data\\ncei_data"):
     for year in range(START_YEAR_NCEI,cur_year):
         retrieve_file = RETRIEVE_FILE_ROOT + str(year) + ".csv.gz"
         url = BASE_URL_NCEI + retrieve_file
-        path, headers = urlretrieve(url, retrieve_file)
+        dir_retrieve_file = AppendDir(retrieve_file,directory)
+        path, headers = urlretrieve(url, dir_retrieve_file)
 
-        print(headers)
-        print(path)
-
-        with gzip.open(retrieve_file) as f:
+        with gzip.open(path) as f:
             lines = f.readlines()
-            # move file pointer to the beginning of a file
-            #f.seek(0)
-            #f = f.writelines(lines[1:])
 
             data = lines[2:]
 
@@ -103,7 +98,7 @@ def get_ncei_data(directory="data\\web_data\\ncei_data"):
             data_headers = clean_data[0]
             data = clean_data[1:]
 
-            new_file_name = RETRIEVE_FILE.rstrip(".gz")
+            new_file_name = retrieve_file.rstrip(".gz")
             dir = AppendDir(new_file_name,"data\\web_data\\ncei_data")
             SaveDataToCSV(data,data_headers,dir)
         os.remove(path)
@@ -237,8 +232,15 @@ def CSV_Count():
 
 if __name__ == "__main__":
     
-    #get_ncei_data()
-    #CSV_Count()
+    # Pass get_bpa_data a directory if given on the cli, else just run it w/ the default dir
+    if len(sys.argv) > 1:
+        dir = sys.argv[1]
+        dir = dir.replace('\\','\\\\')
+        get_ncei_data(directory=dir)
+    else:
+        get_ncei_data()
+    
+
     # Pass get_bpa_data a directory if given on the cli, else just run it w/ the default dir
     #if len(sys.argv) > 1:
     #    dir = sys.argv[1]
