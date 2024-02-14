@@ -42,30 +42,6 @@ for (year in start_year:end_year) {
   }
 }
 
-# Combine all years into data frames
-#CustomerServiceInterruptionsFinal <- bind_rows(lapply(CustomerServiceInterruptions, function(x) {
-#  cols <- max(sapply(CustomerServiceInterruptions, function(y) ncol(y)))
-#  if (ncol(x) < cols) {
-#    x <- cbind(x, matrix("", nrow = nrow(x), ncol = cols - ncol(x)))
-#  }
-#  return(x)
-#}))
-
-#TransmissionLineInterruptionsFinal <- bind_rows(lapply(TransmissionLineInterruptions, function(x) {
-#  cols <- max(sapply(TransmissionLineInterruptions, function(y) ncol(y)))
-#  if (ncol(x) < cols) {
-#    x <- cbind(x, matrix("", nrow = nrow(x), ncol = cols - ncol(x)))
-#  }
-#  return(x)
-#}))
-
-#TransformerInterruptionsFinal <- bind_rows(lapply(TransformerInterruptions, function(x) {
-#  cols <- max(sapply(TransformerInterruptions, function(y) ncol(y)))
-#  if (ncol(x) < cols) {
-#    x <- cbind(x, matrix("", nrow = nrow(x), ncol = cols - ncol(x)))
-#  }
-#  return(x)
-#}))
 
 #Putting all years into one data frame
 #CustomerServiceInterruptionsFinal <- data.table::rbindlist(CustomerServiceInterruptions, fill=TRUE)
@@ -74,29 +50,121 @@ for (year in start_year:end_year) {
 
 #TransformerInterruptionsFinal <- data.table::rbindlist(TransformerInterruptions, fill=TRUE)
 
+#To check how redundancy of values inside of "Dispatcher Cause" and "Field Cause" for years 1999-2013 
+#and of "DispatcherCause" and "FieldCause" for years 2014-2015.
+
+# Initialize a counter
+matching_count <- 0
+
+# Loop through lists 1 to 17
+for (i in 1:17) {
+  # Get the data frame
+  df <- CustomerServiceInterruptions[[i]]
+  
+  # Check for matching values in X7 and X8
+  matching_count <- matching_count + sum(df$X7 == df$X8, na.rm = TRUE)
+}
+
+# Print the total count of matching values
+print(matching_count) 
+#Result is 7475.
+
+#Finding sum of rows from 1999-2015
+# Initialize a variable to store the total sum
+total_sum <- 0
+
+# Loop through lists 1 to 17
+for (i in 1:17) {
+  # Get the data frame
+  df <- CustomerServiceInterruptions[[i]]
+  
+  # Calculate the sum of rows and add it to the total sum
+  total_sum <- total_sum + nrow(df)
+}
+
+# Print the total sum
+print(total_sum)
+#Result is 26170
+
+# 7475/26170 = 0.2856324 or 28.5%.
 
 
-# Set column names for all data frames
+#Do the same analysis for "ResponsibleSystemDispatch" and "ResponsibleSystemField" in years 2014-2015.
+# Initialize a counter
+matching_count <- 0
 
-# Assuming CustomerServiceInterruptionsFinal is your dataframe
-#CustomerServiceInterruptionsFinal <- subset(CustomerServiceInterruptionsFinal, select = 1:(ncol(CustomerServiceInterruptionsFinal) - 1))
+# Loop through lists 16 to 17
+for (i in 16:17) {
+  # Get the data frame
+  df <- CustomerServiceInterruptions[[i]]
+  
+  # Check for matching values in X9 and X10
+  matching_count <- matching_count + sum(df$X9 == df$X10, na.rm = TRUE)
+}
 
-#colnames(CustomerServiceInterruptionsFinal) <- c("Out Datetime", "In Datetime", "Name", "Voltage(kV)", "Duration(minutes)", "OutageType", "Dispatcher Cause", "Field Cause", "System In Control", "MW Intrpt", "District", "OutageID")  # Adjust column names accordingly
-#colnames(TransmissionLineInterruptionsFinal) <- c("Out Datetime", "In Datetime", "Name", "Voltage(kV)", "GenFlag", "Length(miles)", "Duration(minutes", "OutageType", "Cause", "ResponsibleSystem", "O&MDistrict", "TransmissionOwnerNERC TADS", "OutageID")  # Adjust column names accordingly
-#colnames(TransformerInterruptionsFinal) <- c("Out Datetime", "In Datetime", "Name", "VoltageHigh (kV)", "VoltageLow (kV)", "Duration(minutes)", "OutageType", "Cause", "ResponsibleSystem", "O&MDistrict", "TransmissionOwnerNERC TADS", "OutageID")  # Adjust column names accordingly
+# Print the total count of matching values
+print(matching_count)
+#Result is 409
+
+#Finding sum of rows from 2014-2015
+# Initialize a variable to store the total sum
+total_sum <- 0
+
+# Loop through lists 1 to 17
+for (i in 16:17) {
+  # Get the data frame
+  df <- CustomerServiceInterruptions[[i]]
+  
+  # Calculate the sum of rows and add it to the total sum
+  total_sum <- total_sum + nrow(df)
+}
+
+# Print the total sum
+print(total_sum)
+#Result is 2787
+#409/2787 = 0.1467528 or 14.6%.
 
 
-# Determine the number of columns in CustomerServiceInterruptionsFinal
-#num_columns <- ncol(CustomerServiceInterruptionsFinal)
+#Overwrites values in "Dispatcher Cause" with values in "Field Cause" for 1999-2013. 
+#Overwrites values in "CauseDispatch" with values in "CauseField" for 2014-2015
+for (i in 1:17) {
+  # Check if X8 is not empty
+  idx <- !is.na(CustomerServiceInterruptions[[i]]$X8) & CustomerServiceInterruptions[[i]]$X8 != ""
+  
+  # Update X7 with X8 where X8 is not empty
+  CustomerServiceInterruptions[[i]]$X7[idx] <- CustomerServiceInterruptions[[i]]$X8[idx]
+  
+  # Remove the X8 column
+  CustomerServiceInterruptions[[i]] <- subset(CustomerServiceInterruptions[[i]], select = -X8)
+}
 
-# Check the number of columns you're trying to assign
-#num_column_names <- length(c("Out Datetime", "In Datetime", "Name", "Voltage(kV)", "Duration(minutes)", "OutageType", "Dispatcher Cause", "Field Cause", "System In Control", "MW Intrpt", "District", "OutageID"))
+#Overwrites values in "ResponsibleSystemDispatch" with values in "ResponsibleSystemField" for 2014-2015. 
+for (i in 16:17) {
+  # Check if X10 is not empty
+  idx <- !is.na(CustomerServiceInterruptions[[i]]$X10) & CustomerServiceInterruptions[[i]]$X10 != ""
+  
+  # Update X9 with X10 where X10 is not empty
+  CustomerServiceInterruptions[[i]]$X9[idx] <- CustomerServiceInterruptions[[i]]$X10[idx]
+  
+  # Remove the X10 column
+  CustomerServiceInterruptions[[i]] <- subset(CustomerServiceInterruptions[[i]], select = -X10)
+}
 
-# Compare the numbers
-#if (num_columns == num_column_names) {
-  # Assign column names
-  #colnames(CustomerServiceInterruptionsFinal) <- c("Out Datetime", "In Datetime", "Name", "Voltage(kV)", "Duration(minutes)", "OutageType", "Dispatcher Cause", "Field Cause", "System In Control", "MW Intrpt", "District", "OutageID")
-#} else {
-  # Print an error message
- # message("Number of column names does not match the number of columns in the data table.")
+#Renames colnames from "X" series to ones in dataset.
+new_column_names <- c(
+  "Out Datetime", "In Datetime", "Name", "Voltage(kV)", "Duration(minutes)", 
+  "OutageType", "Cause", "ResponsibleSystem", "MW Intrpt", "O&MDistrict", "OutageID"
+)
+
+for (i in 1:26) {
+  # Rename the columns
+  colnames(CustomerServiceInterruptions[[i]]) <- new_column_names
+}
+
+#Creates csv files of updated dataset.
+#install.packages("writexl")
+#library(writexl)
+
+#for (i in 1:26) {
+#  write_xlsx(CustomerServiceInterruptions[[i]], path = paste0("output_", i, ".xlsx"))
 #}
