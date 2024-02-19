@@ -7,7 +7,19 @@ setwd("Github/STAT-190-Project-1")
 # Read in Data
 BPA_CSI = read.csv("data/compressed_raw_data/CustomerServiceInterruptions.csv")
 
+# See how many rows are in the BPA Customer Service Data
 nrow(BPA_CSI)
+
+# Consider removing any rows where the outage was planned
+BPA_CSI = BPA_CSI[!(BPA_CSI$OutageType %in% "Plan"),]
+
+# Remove strings from Duration.minutes
+BPA_CSI <- cbind(BPA_CSI[,!Duration.minutes.], apply(BPA_CSI[,Duration.minutes.], 2, function(x) as.numeric(as.character(x))))
+BPA_CSI = BPA_CSI[!(BPA_CSI$Duration.minutes. %in% "still out"),]
+BPA_CSI$Duration.minutes. = as.numeric(as.character(BPA_CSI$Duration.minutes.)) 
+# Add a column relating to outage length
+BPA_CSI$DurationType <- cut(BPA_CSI$Duration.minutes., c(0, 60, 1440, Inf), 
+                            labels = c('Hour', 'Day', 'Multiday'))
 # Check how many causes there are in the dataset
 unique(BPA_CSI["Cause"])
 
@@ -80,12 +92,11 @@ BPA_CSI_FREQ <- BPA_CSI %>%
   filter(n() >= 750)
 
 # Display the most common causes of failure
-ggplot(data=BPA_CSI_FREQ, aes(x=Cause)) +
+ggplot(data=BPA_CSI_FREQ, aes(x=Cause, fill = DurationClass)) +
   geom_bar() +
   geom_text(stat='count', aes(label=..count..), vjust=-1) + 
   theme(axis.text.x = element_text(angle = 45, hjust=1)) + 
   labs(title = "Commonly Occuring Failure Causes")
-
 
 
 # Get only uncommonly occurring problems
@@ -94,9 +105,15 @@ BPA_CSI_UNC <- BPA_CSI %>%
   filter(n() >= 100) %>%
   filter(n() < 750)
 
+
+
+colnames(BPA_CSI_UNC)[names(BPA_CSI_UNC) == "O&MDistrict"] <- "OMDistrcit"
+
+
 # Display the most common causes of failure
 ggplot(data=BPA_CSI_UNC, aes(x=Cause)) +
   geom_bar() +
   geom_text(stat='count', aes(label=..count..), vjust=-1) + 
   theme(axis.text.x = element_text(angle = 45, hjust=1)) +
-  labs(title = "Uncommonly Occuring Failure Causes")
+  labs(title = "Uncommonly Occuring Failure Causes") + 
+  facet_wrap(~OMDistrict, ncol = 3)
