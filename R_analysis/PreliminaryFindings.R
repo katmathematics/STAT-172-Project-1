@@ -2,6 +2,8 @@
 library(ggplot2) # For visualizing data
 library(dplyr) # Clean Data
 
+setwd("Github/STAT-190-Project-1")
+
 # Read in Data
 BPA_CSI = read.csv("data/compressed_raw_data/CustomerServiceInterruptions.csv")
 
@@ -81,4 +83,20 @@ BPA_CSI_FREQ <- BPA_CSI %>%
 ggplot(data=BPA_CSI_FREQ, aes(x=Cause)) +
   geom_bar() +
   geom_text(stat='count', aes(label=..count..), vjust=-1) + 
-  theme(axis.text.x = element_text(angle = 45, hjust=1))
+  theme(axis.text.x = element_text(angle = 45, hjust=1)) + 
+  labs(title = "Commonly Occuring Failure Causes")
+
+
+
+# Get only uncommonly occurring problems
+BPA_CSI_UNC <- BPA_CSI %>%
+  group_by(Cause) %>%
+  filter(n() >= 100) %>%
+  filter(n() < 750)
+
+# Display the most common causes of failure
+ggplot(data=BPA_CSI_UNC, aes(x=Cause)) +
+  geom_bar() +
+  geom_text(stat='count', aes(label=..count..), vjust=-1) + 
+  theme(axis.text.x = element_text(angle = 45, hjust=1)) +
+  labs(title = "Uncommonly Occuring Failure Causes")
