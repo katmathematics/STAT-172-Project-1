@@ -44,7 +44,7 @@ for (year in start_year:end_year) {
 
 
 #Putting all years into one data frame
-#CustomerServiceInterruptionsFinal <- data.table::rbindlist(CustomerServiceInterruptions, fill=TRUE)
+CustomerServiceInterruptionsFinal <- data.table::rbindlist(CustomerServiceInterruptions, fill=TRUE)
 
 #TransmissionLineInterruptionsFinal <- data.table::rbindlist(TransmissionLineInterruptions, fill=TRUE)
 
@@ -160,6 +160,11 @@ for (i in 1:26) {
   # Rename the columns
   colnames(CustomerServiceInterruptions[[i]]) <- new_column_names
 }
+
+#Putting all years into one data frame
+CustomerServiceInterruptionsFinal <- data.table::rbindlist(CustomerServiceInterruptions, fill=TRUE)
+
+write.csv(CustomerServiceInterruptionsFinal, "~\\..\\data\\compressed_raw_data\\CustomerServiceInterruptions.csv", row.names=FALSE)
 
 #Creates csv files of updated dataset.
 #install.packages("writexl")
