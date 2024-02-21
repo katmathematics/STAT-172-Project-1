@@ -14,11 +14,15 @@ nrow(BPA_CSI)
 BPA_CSI = BPA_CSI[!(BPA_CSI$OutageType %in% "Plan"),]
 
 # Remove strings from Duration.minutes
-BPA_CSI <- cbind(BPA_CSI[,!Duration.minutes.], apply(BPA_CSI[,Duration.minutes.], 2, function(x) as.numeric(as.character(x))))
 BPA_CSI = BPA_CSI[!(BPA_CSI$Duration.minutes. %in% "still out"),]
 BPA_CSI$Duration.minutes. = as.numeric(as.character(BPA_CSI$Duration.minutes.)) 
+
+# Rename O&M District and remove rows where O&M District is blank
+colnames(BPA_CSI)[names(BPA_CSI) == "O&MDistrict"] <- "OMDistrcit"
+BPA_CSI = BPA_CSI[!(BPA_CSI$O.MDistrict %in% ""),]
+
 # Add a column relating to outage length
-BPA_CSI$DurationType <- cut(BPA_CSI$Duration.minutes., c(0, 60, 1440, Inf), 
+BPA_CSI$DurationType <- cut(BPA_CSI$Duration.minutes., c(-1, 60, 1440, Inf), 
                             labels = c('Hour', 'Day', 'Multiday'))
 # Check how many causes there are in the dataset
 unique(BPA_CSI["Cause"])
@@ -92,11 +96,12 @@ BPA_CSI_FREQ <- BPA_CSI %>%
   filter(n() >= 750)
 
 # Display the most common causes of failure
-ggplot(data=BPA_CSI_FREQ, aes(x=Cause, fill = DurationClass)) +
+ggplot(data=BPA_CSI_FREQ, aes(x=Cause, fill = DurationType)) +
   geom_bar() +
-  geom_text(stat='count', aes(label=..count..), vjust=-1) + 
-  theme(axis.text.x = element_text(angle = 45, hjust=1)) + 
-  labs(title = "Commonly Occuring Failure Causes")
+  #geom_text(stat='count', aes(label=..count..), vjust=-1) + # Turns on labels for each bar
+  theme(axis.text.x = element_text(angle = 90, hjust=1)) + 
+  labs(title = "Commonly Occuring Failure Causes") #+
+  #facet_wrap(~O.MDistrict, ncol = 3)
 
 
 # Get only uncommonly occurring problems
@@ -106,14 +111,42 @@ BPA_CSI_UNC <- BPA_CSI %>%
   filter(n() < 750)
 
 
+# Display the most common causes of failure
+ggplot(data=BPA_CSI_UNC, aes(x=Cause, fill = DurationType)) +
+  geom_bar() +
+  #geom_text(stat='count', aes(label=..count..), vjust=-1) + 
+  theme(axis.text.x = element_text(angle = 90, hjust=1)) +
+  labs(title = "Uncommonly Occuring Failure Causes") #+ 
+  #facet_wrap(~O.MDistrict, ncol = 3)
 
-colnames(BPA_CSI_UNC)[names(BPA_CSI_UNC) == "O&MDistrict"] <- "OMDistrcit"
+# Look only at outages lasting more than an hour
+BPA_CSI_SRS = BPA_CSI[!(BPA_CSI$DurationType %in% "Hour"),]
+
+# Remove infrequently occuring causes
+BPA_CSI_FREQ_SRS <- BPA_CSI_SRS %>%
+  group_by(Cause) %>%
+  filter(n() >= 500)
+
+# Display the most common causes of failure
+ggplot(data=BPA_CSI_FREQ_SRS, aes(x=Cause, fill = DurationType)) +
+  geom_bar() +
+  #geom_text(stat='count', aes(label=..count..), vjust=-1) + # Turns on labels for each bar
+  theme(axis.text.x = element_text(angle = 90, hjust=1)) + 
+  labs(title = "Commonly Occuring Failure Causes") #+
+#facet_wrap(~O.MDistrict, ncol = 3)
+
+
+# Get only uncommonly occurring problems
+BPA_CSI_UNC_SRS <- BPA_CSI_SRS %>%
+  group_by(Cause) %>%
+  filter(n() >= 50) %>%
+  filter(n() < 500)
 
 
 # Display the most common causes of failure
-ggplot(data=BPA_CSI_UNC, aes(x=Cause)) +
+ggplot(data=BPA_CSI_UNC_SRS, aes(x=Cause, fill = DurationType)) +
   geom_bar() +
-  geom_text(stat='count', aes(label=..count..), vjust=-1) + 
-  theme(axis.text.x = element_text(angle = 45, hjust=1)) +
-  labs(title = "Uncommonly Occuring Failure Causes") + 
-  facet_wrap(~OMDistrict, ncol = 3)
+  #geom_text(stat='count', aes(label=..count..), vjust=-1) + 
+  theme(axis.text.x = element_text(angle = 90, hjust=1)) +
+  labs(title = "Uncommonly Occuring Failure Causes") #+ 
+#facet_wrap(~O.MDistrict, ncol = 3)
