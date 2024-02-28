@@ -134,8 +134,8 @@ ggplot(data=BPA_CSI_FREQ_SRS, aes(x=Cause, fill = DurationType)) +
   geom_bar() +
   #geom_text(stat='count', aes(label=..count..), vjust=-1) + # Turns on labels for each bar
   theme(axis.text.x = element_text(angle = 90, hjust=1)) + 
-  labs(title = "Commonly Occuring Failure Causes") #+
-#facet_wrap(~O.MDistrict, ncol = 3)
+  labs(title = "Commonly Occuring Failure Causes") +
+  facet_wrap(~O.MDistrict, ncol = 3)
 
 
 # Get only uncommonly occurring problems
@@ -145,10 +145,10 @@ BPA_CSI_UNC_SRS <- BPA_CSI_SRS %>%
   filter(n() < 500)
 
 
-# Display the most common causes of failure
+# Display the uncommon causes of failure
 ggplot(data=BPA_CSI_UNC_SRS, aes(x=Cause, fill = DurationType)) +
   geom_bar() +
   #geom_text(stat='count', aes(label=..count..), vjust=-1) + 
   theme(axis.text.x = element_text(angle = 90, hjust=1)) +
-  labs(title = "Uncommonly Occuring Failure Causes") #+ 
-#facet_wrap(~O.MDistrict, ncol = 3)
+  labs(title = "Uncommonly Occuring Failure Causes") + 
+  facet_wrap(~O.MDistrict, ncol = 3)

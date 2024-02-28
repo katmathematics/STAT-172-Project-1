@@ -9,5 +9,5 @@ setwd("Github/STAT-190-Project-1")
 # Read in Data
 EIA_Int = read.csv("data/compressed_raw_data/EIAInterchange.csv")
 
-unique(EIA_Int["DIBA_Region"])
-print(unique(EIA_Int$DIBA_Region))
+unique(EIA_Int["Region"])
+print(unique(EIA_Int$Region))
