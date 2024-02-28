@@ -1,3 +1,5 @@
+# Author(s) (ordered by contribution): Hming Zama, Katja Mathesius
+
 rm(list = ls())
 
 library(rvest)

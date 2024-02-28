@@ -1,3 +1,5 @@
+# Author(s) (ordered by contribution): Katja Mathesius
+
 #install.packages("ggplot2")
 library(ggplot2) # For visualizing data
 library(dplyr) # Clean Data
