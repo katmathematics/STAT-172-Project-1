@@ -1,27 +1,38 @@
 # Author(s) (ordered by contribution): Katja Mathesius
 library(tidyverse)
+library(readr)
+library(ggplot2)
+library(zoo)
 
-setwd("Github/STAT-190-Project-1/data/web_data/eia_data/interchange")
+setwd("Github/STAT-190-Project-1/")
 
-files <- list.files(pattern = "\\.csv$")
+raw_data <- list.files(path = "data/web_data/eia_data/interchange", pattern = "\\.csv$", full.names = TRUE) %>%
+  lapply(read_csv) %>%
+  bind_rows
 
-DF <-  read.csv(files[1])
-DF %>% select(order(colnames(DF)))
-DF[DF == ""] <- NA 
+print(unique(raw_data$Region))
 
-print(unique(DF$Region))
+raw_data$date <- as.Date(raw_data$"UTC Time at End of Hour", format =  "%m/%d/%Y %H:%M:%S")
+df$Month_Yr <- 
 
-# Maybe we should try compressing the data by month and then writing to the file
-#reading each file within the range and append them to create one file
-for (f in files[-1]){
-  #print(f)
-  df <- read.csv(f)      # read the file
-  #print(unique(df$Region))
-  df %>% select(order(colnames(df)))
-  df[df == ""] <- NA 
-  DF <- rbind(DF, df)    # append the current file
-  #print(unique(DF$Region))
-}
+raw_data <- raw_data %>% 
+  rename("interchange" = "Interchange (MW)")
+
+avg_daily_interchange <- raw_data %>%
+  mutate(date = zoo::as.yearmon(date)) %>%
+  group_by(date, Region) %>%
+  summarize(mean_interchange = mean(interchange))
+
+#aggregate(raw_data_region["Interchange (MW)"], by=raw_data_region[], sum)
+
+avg_interchange_grouped <- avg_daily_interchange %>%
+  group_by(Region)
+
+# Most basic bubble plot
+p <- ggplot(avg_interchange_grouped, aes(x=date, y=mean_interchange, group=Region, color=Region)) +
+  geom_line() + 
+  xlab("")
+p
 
 #writing the appended file  
-write.csv(DF, "../../../compressed_raw_data/EIAInterchange.csv", row.names=FALSE, quote=FALSE)
+write.csv(raw_data, "data/compressed_raw_data/EIAInterchange.csv", row.names=FALSE, quote=FALSE)
