@@ -1,13 +1,24 @@
 # Author(s) (ordered by contribution): Katja Mathesius
 
-#install.packages("ggplot2")
-library(ggplot2) # For visualizing data
-library(dplyr) # Clean Data
+# Install packages if not installed, then load packages
+packages <- c('ggplot2', 'dplyr')
+installed_packages <- packages %in% rownames(installed.packages())
+if (any(installed_packages == FALSE)) {
+  install.packages(packages[!installed_packages])
+}
+invisible(lapply(packages, library, character.only = TRUE))
 
-setwd("Github/STAT-190-Project-1")
 
 # Read in Data
-EIA_Int = read.csv("data/compressed_raw_data/EIAInterchange.csv")
+EIA_Int = read.csv("data/cleaned_data/EIAInterchangeClean.csv")
 
-unique(EIA_Int["Region"])
-print(unique(EIA_Int$Region))
+#print(unique(EIA_Int$Region))
+
+avg_interchange_grouped <- avg_daily_interchange %>%
+  group_by(Region)
+
+# Most basic bubble plot
+p <- ggplot(avg_interchange_grouped, aes(x=date, y=mean_interchange, group=Region, color=Region)) +
+  geom_line() + 
+  xlab("")
+p

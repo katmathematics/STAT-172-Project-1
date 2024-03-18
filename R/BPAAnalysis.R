@@ -1,10 +1,12 @@
 # Author(s) (ordered by contribution): Katja Mathesius
 
-#install.packages("ggplot2")
-library(ggplot2) # For visualizing data
-library(dplyr) # Clean Data
-
-setwd("Github/STAT-190-Project-1")
+# Install packages if not installed, then load packages
+packages <- c("ggplot2", "dplyr")
+installed_packages <- packages %in% rownames(installed.packages())
+if (any(installed_packages == FALSE)) {
+  install.packages(packages[!installed_packages])
+}
+invisible(lapply(packages, library, character.only = TRUE))
 
 # Read in Data
 BPA_CSI = read.csv("data/compressed_raw_data/CustomerServiceInterruptions.csv")

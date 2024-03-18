@@ -1,10 +1,12 @@
 # Author(s) (ordered by contribution): Katja Mathesius
-install.packages(c('tidyverse', 'ggplot2', 'readr','zoo'))
 
-library(tidyverse)
-library(readr)
-library(ggplot2)
-library(zoo)
+# Install packages if not installed, then load packages
+packages <- c('tidyverse', 'ggplot2', 'readr','zoo')
+installed_packages <- packages %in% rownames(installed.packages())
+if (any(installed_packages == FALSE)) {
+  install.packages(packages[!installed_packages])
+}
+invisible(lapply(packages, library, character.only = TRUE))
 
 raw_data <- list.files(path = "data/web_data/eia_data/interchange", pattern = "\\.csv$", full.names = TRUE) %>%
   lapply(read_csv) %>%

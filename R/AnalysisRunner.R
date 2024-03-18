@@ -6,15 +6,21 @@
 # Active Maintenance Time frame: Feb 2024-May 2024
 # Github: https://github.com/katmathematics/STAT-190-Project-1
 
-# Install necessary packages
-install.packages(c('reticulate'))
+# Clear the environment
+rm(list = ls())
 
-## Load packages
-library(reticulate) # Runs python code
+# Install packages if not installed, then load packages
+packages <- c("reticulate")
+installed_packages <- packages %in% rownames(installed.packages())
+if (any(installed_packages == FALSE)) {
+  install.packages(packages[!installed_packages])
+}
+invisible(lapply(packages, library, character.only = TRUE))
+
 
 ### Set to FALSE to run the entire process automatically. Set to true to be prompted 
 ### for which files you would like to run 
-RUN_INTERACTIVELY = TRUE
+RUN_INTERACTIVELY = FALSE
 
 ### Default value for which files to run
 
