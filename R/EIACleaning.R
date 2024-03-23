@@ -22,6 +22,15 @@ clean_data <- raw_data %>%
 # Put date into a date format
 clean_data$date <- as.Date(clean_data$"UTC Time at End of Hour", format =  "%m/%d/%Y %H:%M:%S")
 
+# Check how many NA are in the interchange column
+percent_na = sum(is.na(clean_data$interchange))/nrow(clean_data)
+if (percent_na > .005) {
+  warning("HIGH PERCENT OF MISSING INTERCHANGE DATA DETECTED")
+}
+
+clean_data = clean_data[!is.na(clean_data$interchange),]
+
+
 # Condense the data by taking the average of the date
 avg_daily_interchange <- clean_data %>%
   mutate(date = zoo::as.yearmon(date)) %>%

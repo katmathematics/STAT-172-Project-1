@@ -152,5 +152,7 @@ ggplot(data=BPA_CSI_UNC_SRS, aes(x=Cause, fill = DurationType)) +
   geom_bar() +
   #geom_text(stat='count', aes(label=..count..), vjust=-1) + 
   theme(axis.text.x = element_text(angle = 90, hjust=1)) +
-  labs(title = "Uncommonly Occuring Failure Causes") + 
-  facet_wrap(~O.MDistrict, ncol = 3)
+  labs(title = "Uncommonly Occuring Failure Causes") #+ 
+  #facet_wrap(~O.MDistrict, ncol = 3)
+
+ggsave("plot.png")

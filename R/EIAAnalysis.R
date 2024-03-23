@@ -14,11 +14,16 @@ EIA_Int = read.csv("data/cleaned_data/EIAInterchangeClean.csv")
 
 #print(unique(EIA_Int$Region))
 
-avg_interchange_grouped <- avg_daily_interchange %>%
+avg_interchange_grouped <- EIA_Int %>%
   group_by(Region)
 
+avg_interchange_grouped_date <- avg_interchange_grouped
+
+avg_interchange_grouped_date$date <- as.Date(avg_interchange_grouped_date$"date", format =  "%d-%m-%Y")
+
 # Most basic bubble plot
-p <- ggplot(avg_interchange_grouped, aes(x=date, y=mean_interchange, group=Region, color=Region)) +
+p <- ggplot(avg_interchange_grouped_date, aes(x=date, y=mean_interchange, group=Region, color=Region)) +
   geom_line() + 
-  xlab("")
+  xlab("Date") +
+  theme(axis.text.x = element_text(angle = 90, hjust=1))
 p
