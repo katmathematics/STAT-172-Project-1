@@ -13,6 +13,8 @@ interchange_data = read.csv("data/cleaned_data/EIAInterchangeClean.csv")
 
 lightning_data = read.csv("data/cleaned_data/NCEICountiesClean.csv")
 
+wildfire_data = read.csv("data/cleaned_data/WildfiresClean.csv")
+
 # List of states the stack overflow wanted me to create
 states <- c("california","texas","florida","maine","vermont","new hampshire",
             "massachusetts","connecticut","rhode island","new york","kentucky",
@@ -44,16 +46,30 @@ lightning_data$date <- paste("01",lightning_data$date)
 lightning_data$date_date <- format(as.Date(lightning_data$date, format =  '%d %b %Y'), '%b %Y')
 str(lightning_data)
 
+# Read the wildfire data's date as a date
+wildfire_data$date <- as.character(wildfire_data$date)
+wildfire_data$date <- paste("01",wildfire_data$date)
+wildfire_data$date <- gsub(" ", "-", wildfire_data$date)
+wildfire_data$date_date <- format(as.Date(wildfire_data$date, format =  '%d-%b-%Y'), '%b %Y')
+str(wildfire_data)
+
+
 # Read the interchange data's date as a date
 interchange_data$date_date <- format(as.Date(interchange_data$date, format =  "%d-%m-%y"), '%b %Y')
 str(interchange_data)
 
-
+# Many-to-many merge by date
 merged_data <- merge(lightning_data, interchange_data, by = "date_date") 
 merged_data = select(merged_data, -c("date.x", "date.y"))
 merged_data$state <- gsub(" ", "-", merged_data$state)
 merged_data$states_covered <- gsub(" ", "-", merged_data$states_covered)
-str(merged_data)
-mergeder_data <- merged_data
-mergeder_data$flag <- mapply(grepl, mergeder_data$state, mergeder_data$states_covered)
-mergeder_data <- mergeder_data[mergeder_data$flag == TRUE,]
+
+# Reduce the data down to get the correct merge 
+EIA_NCEI_data <- merged_data
+EIA_NCEI_data$flag <- mapply(grepl, EIA_NCEI_data$state, EIA_NCEI_data$states_covered)
+EIA_NCEI_data <- EIA_NCEI_data[EIA_NCEI_data$flag == TRUE,]
+
+# Merge in the wildfire data
+colnames(EIA_NCEI_data)[names(EIA_NCEI_data) == "date_date"] <- "date"
+final_data <- merge(EIA_NCEI_data, wildfire_data, by = c("date","state"))
+
