@@ -1,12 +1,15 @@
 # Author(s) (ordered by contribution): Hming Zama, Katja Mathesius
 
-rm(list = ls())
+# Install packages if not installed, then load packages
+packages <- c("rvest", "dplyr")
+installed_packages <- packages %in% rownames(installed.packages())
+if (any(installed_packages == FALSE)) {
+  install.packages(packages[!installed_packages])
+}
+invisible(lapply(packages, library, character.only = TRUE))
 
-library(rvest)
-library(dplyr)
 
-# Definie a funct to scrape data for given year
-
+### Pull data from 1999 to 2024
 start_year <- 1999
 end_year <- 2024
 
@@ -166,7 +169,7 @@ for (i in 1:26) {
 #Putting all years into one data frame
 CustomerServiceInterruptionsFinal <- data.table::rbindlist(CustomerServiceInterruptions, fill=TRUE)
 
-write.csv(CustomerServiceInterruptionsFinal, "~\\..\\data\\compressed_raw_data\\CustomerServiceInterruptions.csv", row.names=FALSE)
+write.csv(CustomerServiceInterruptionsFinal, "data/compressed_raw_data/CustomerServiceInterruptions.csv", row.names=FALSE)
 
 #Creates csv files of updated dataset.
 #install.packages("writexl")

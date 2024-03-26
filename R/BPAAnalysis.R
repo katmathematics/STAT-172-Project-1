@@ -1,10 +1,12 @@
 # Author(s) (ordered by contribution): Katja Mathesius
 
-#install.packages("ggplot2")
-library(ggplot2) # For visualizing data
-library(dplyr) # Clean Data
-
-setwd("Github/STAT-190-Project-1")
+# Install packages if not installed, then load packages
+packages <- c("ggplot2", "dplyr")
+installed_packages <- packages %in% rownames(installed.packages())
+if (any(installed_packages == FALSE)) {
+  install.packages(packages[!installed_packages])
+}
+invisible(lapply(packages, library, character.only = TRUE))
 
 # Read in Data
 BPA_CSI = read.csv("data/compressed_raw_data/CustomerServiceInterruptions.csv")
@@ -150,5 +152,7 @@ ggplot(data=BPA_CSI_UNC_SRS, aes(x=Cause, fill = DurationType)) +
   geom_bar() +
   #geom_text(stat='count', aes(label=..count..), vjust=-1) + 
   theme(axis.text.x = element_text(angle = 90, hjust=1)) +
-  labs(title = "Uncommonly Occuring Failure Causes") + 
-  facet_wrap(~O.MDistrict, ncol = 3)
+  labs(title = "Uncommonly Occuring Failure Causes") #+ 
+  #facet_wrap(~O.MDistrict, ncol = 3)
+
+ggsave("plot.png")
