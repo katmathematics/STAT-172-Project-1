@@ -50,16 +50,18 @@ str(lightning_data)
 wildfire_data$date <- as.character(wildfire_data$date)
 wildfire_data$date <- paste("01",wildfire_data$date)
 wildfire_data$date <- gsub(" ", "-", wildfire_data$date)
-wildfire_data$date_date <- format(as.Date(wildfire_data$date, format =  '%d-%b-%Y'), '%b %Y')
+wildfire_data$date <- format(as.Date(wildfire_data$date, format =  '%d-%b-%y'), '%b %Y')
 str(wildfire_data)
 
 
 # Read the interchange data's date as a date
-interchange_data$date_date <- format(as.Date(interchange_data$date, format =  "%d-%m-%y"), '%b %Y')
+interchange_data$date <- as.character(interchange_data$date)
+interchange_data$date <- paste("01",interchange_data$date)
+interchange_data$date_date <- format(as.Date(interchange_data$date, format =  "%d %b %Y"), '%b %Y')
 str(interchange_data)
 
 # Many-to-many merge by date
-merged_data <- merge(lightning_data, interchange_data, by = "date_date") 
+merged_data <- merge(lightning_data, interchange_data, by = "date_date", all.x = TRUE) 
 merged_data = select(merged_data, -c("date.x", "date.y"))
 merged_data$state <- gsub(" ", "-", merged_data$state)
 merged_data$states_covered <- gsub(" ", "-", merged_data$states_covered)
@@ -71,5 +73,12 @@ EIA_NCEI_data <- EIA_NCEI_data[EIA_NCEI_data$flag == TRUE,]
 
 # Merge in the wildfire data
 colnames(EIA_NCEI_data)[names(EIA_NCEI_data) == "date_date"] <- "date"
-final_data <- merge(EIA_NCEI_data, wildfire_data, by = c("date","state"))
+final_data <- merge(x = EIA_NCEI_data, y = wildfire_data, by = c("state","date"), all.x = TRUE)
 
+
+# Write the Merged Data 
+write.csv(final_data, "data/model_data/ModelDataLeftOuter.csv", row.names=FALSE, quote=FALSE)
+
+# Write the Merged Data where every row is complete
+complete_data <- final_data[complete.cases(final_data), ]
+write.csv(complete_data, "data/model_data/ModelDataInner.csv", row.names=FALSE, quote=FALSE)
