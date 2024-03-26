@@ -81,4 +81,4 @@ write.csv(final_data, "data/model_data/ModelDataLeftOuter.csv", row.names=FALSE,
 
 # Write the Merged Data where every row is complete
 complete_data <- final_data[complete.cases(final_data), ]
-write.csv(complete_data, "data/model_data/ModelDataInner.csv", row.names=FALSE, quote=FALSE)
+write.csv(complete_data, "data/model_data/ModelDataComplete.csv", row.names=FALSE, quote=FALSE)
