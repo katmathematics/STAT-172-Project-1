@@ -24,7 +24,7 @@ raw_data = read.csv("data/compressed_raw_data/NCEICountiesCompressed.csv")
 raw_data$county <- paste(raw_data$state_county, raw_data$county)
 
 # Put date into a date format
-raw_data["str_date"] <- sprintf("%.0f", raw_data[['X.ZDAY']])
+raw_data["str_date"] <- as.character(raw_data[['X.ZDAY']])
 raw_data$date <- as.Date(raw_data$str_date, format =  "%Y%m%d")
 
 lightning_monthly_count <- raw_data %>%
