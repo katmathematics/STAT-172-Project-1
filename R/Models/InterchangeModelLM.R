@@ -14,13 +14,12 @@ df <- complete_data
 
 int_model_df <- df %>%
   mutate(date = zoo::as.yearmon(date)) %>%
-  group_by(date,Region) %>%
+  group_by(Region,date) %>%
   summarize(mean_interchange = mean(mean_interchange))
 
 for(lag_val in 12:23) {
-  lag_col_name <- paste("lag_", lag_val,"")
-  print(lag_col_name)
-  
+  lag_col_name <- paste("lag_", lag_val,sep="")
+  int_model_df[[lag_col_name]] <- sapply(1:nrow(int_model_df), function(x) int_model_df$mean_interchange[x-lag_val])
 }
  
 linear_model <- lm(,data=df)
