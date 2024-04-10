@@ -105,20 +105,24 @@ def get_ncei_data(directory="data\\web_data\\ncei_data"):
 if __name__ == "__main__":
     
     # Pass get_bpa_data a directory if given on the cli, else just run it w/ the default dir
-    #if len(sys.argv) > 1:
-    #    dir = sys.argv[1]
-    #    dir = dir.replace('\\','\\\\')
-    #    get_ncei_data(directory=dir)
-    #else:
-    #    get_ncei_data()
-    
-
-    # Pass get_bpa_data a directory if given on the cli, else just run it w/ the default dir
-    #if len(sys.argv) > 1:
-    #    dir = sys.argv[1]
-    #    dir = dir.replace('\\','\\\\')
-    #    get_bpa_data(directory=dir)
-    #else:
-    #    get_bpa_data()
-
+    if len(sys.argv) > 1:
+        func_select = sys.argv[1]
+        if func_select == "bpa":
+            if len(sys.argv) > 2:
+                dir = sys.argv[2]
+                dir = dir.replace('\\','\\\\')
+                get_bpa_data(directory=dir)
+            else:
+                get_bpa_data()
+        elif func_select == "ncei":
+            if len(sys.argv) > 2:
+                dir = sys.argv[2]
+                dir = dir.replace('\\','\\\\')
+                get_ncei_data(directory=dir)
+            else:
+                get_ncei_data()
+    else:
+        get_bpa_data()
+        get_ncei_data()
+        
     print("Done!")

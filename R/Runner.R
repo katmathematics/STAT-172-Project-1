@@ -1,4 +1,4 @@
-# File Author(s) (ordered by contribution): Katja Mathesius
+# File Author(s) (ordered by contribution): Katja Mathesius, Caleb Patterson
 # Project Contributors (ordered alphabetically): Katja Mathesius, Caleb Patterson, Hming Zama
 # Description: An analysis aiming to utilize publicly available information about grid demand and
 #              commonly occurring risks to the grid in order to evaluate ideal locations to expand
@@ -36,6 +36,16 @@ run_EIA_Analysis = TRUE
 run_NCEI_Scraper = TRUE
 run_NCEI_Cleaning = TRUE
 run_NCEI_Analysis = TRUE
+
+# Wildfire Workflow: Data Manually Downloaded from -> Cleaning R script -> Analysis R script
+run_Wildfire_Cleaning = TRUE
+run_Wildfire_Analysis = TRUE
+
+# Merge Data Sources
+run_Merge_Data_Sources = TRUE
+
+# Complete Analaysis
+run_Complete_Analysis = TRUE
 
 # Aids in initializing whether or not certain files should be run based on command line input.
 # Loops as long as a definitive yes/no response has not been provided
@@ -95,6 +105,22 @@ if (RUN_INTERACTIVELY) {
   ### EIA Analysis Set Up
   prompt_text = "Would you like to run the code for ANALYZING grid demand data from the U.S. Energy Information Administration? (Yes/No): "
   run_EIA_Analysis = setup_runner(prompt_text)
+  
+  ### Wildfire Cleaning Set Up
+  prompt_text = "Would you like to run the code for CLEANING wildfire data from the Fort Collins, CO: Forest Service Research Data Archive? (Yes/No): "
+  run_Wildfire_Cleaning = setup_runner(prompt_text)
+  
+  ### Wildfire Analysis Set Up
+  prompt_text = "Would you like to run the code for ANALYZING grid demand data from the Fort Collins, CO: Forest Service Research Data Archive? (Yes/No): "
+  run_Wildfire_Analysis = setup_runner(prompt_text)
+  
+  ### Merge Data
+  prompt_text = "Would you like to run the code for MERGING data sources? (Yes/No): "
+  run_Merge_Data_Sources = setup_runner(prompt_text)
+  
+  ### Complete Analysis
+  prompt_text = "Would you like to run the code for COMPLETE ANALYSIS? (Yes/No): "
+  run_Complete_Analysis = setup_runner(prompt_text)
 }
 
 
@@ -115,12 +141,47 @@ if (run_EIA_Analysis) {
   source("R/EIAAnalysis.R")
 }
 
+if (run_NCEI_Cleaning) {
+  source("R/NCEILightningCleaning.R")
+}  
+  
+if (run_NCEI_Analysis) {
+  source("R/NCEILightningAnalysis.R")
+}
+  
+if (run_Wildfire_Cleaning) {
+  source("R/WildfireCleaning.R")
+}  
+
+if (run_Wildfire_Analysis) {
+  source("R/WildfireAnalysis.R")
+}
+
+if (run_Merge_Data_Sources) {
+  source("R/MergeDataSources.R")
+}
+
+if (run_Complete_Analysis) {
+  source("R/CompleteAnalysis")
+}
+
 ### Not totally sure how to handle the python stuff
 #if (run_NCEI_Scraper) {
 #  source_python("Python/GetData.py")
+  system('pip install -r Python/requirements.txt')
+  system('python Python/GetData.py ncei data/web_data/ncei_data')
 #  get_ncei_data()
 #}
 
-if (run_NCEI_Cleaning) {
-  source("R/NCEILightningCleaning.R")
+}
+
+
+# Function to execute Python script
+run_python_script <- function(script_path) {
+  source_python(script_path)
+}
+
+if (run_NCEI_Scraper) {
+  python_script_path <- "/Users/clbpt/OneDrive/Documents/GitHub/STAT-172-Project-1/Python/GetData.py"
+  run_python_script(python_script_path)
 }

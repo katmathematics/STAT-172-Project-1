@@ -1,3 +1,10 @@
+# File Author(s) (ordered by contribution): Caleb Patterson
+# Project Contributors (ordered alphabetically): Katja Mathesius, Caleb Patterson, Hming Zama
+# Description: An analysis aiming to utilize publicly available information about grid demand and
+#              commonly occurring risks to the grid in order to evaluate ideal locations to expand
+#              resources into
+# Active Maintenance Time frame: Feb 2024-May 2024
+# Github: https://github.com/katmathematics/STAT-190-Project-1
 install.packages("sp")
 install.packages("maps")
 install.packages("maptools", repos = "https://packagemanager.posit.co/cran/2023-10-13")
@@ -27,11 +34,14 @@ raw_data$county <- paste(raw_data$state_county, raw_data$county)
 raw_data["str_date"] <- sprintf("%.0f", raw_data[['X.ZDAY']])
 raw_data$date <- as.Date(raw_data$str_date, format =  "%Y%m%d")
 
+<<<<<<< Updated upstream
 lightning_monthly_count <- raw_data %>%
   mutate(date = zoo::as.yearmon(date)) %>%
   group_by(date, state_county, county) %>%
   summarize(sum_lightning = sum(TOTAL_COUNT))
 
+=======
+>>>>>>> Stashed changes
 # Write the Compressed Data 
 write.csv(lightning_monthly_count, "data/cleaned_data/NCEICountiesClean.csv", row.names=FALSE, quote=FALSE)
 
