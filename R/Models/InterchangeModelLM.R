@@ -19,9 +19,19 @@ int_model_df <- df %>%
 
 for(lag_val in 12:23) {
   lag_col_name <- paste("lag_", lag_val,sep="")
-  int_model_df[[lag_col_name]] <- sapply(1:nrow(int_model_df), function(x) int_model_df$mean_interchange[x-lag_val])
+  int_model_df[[lag_col_name]] <- dplyr::lag(int_model_df$mean_interchange, n=lag_val)
 }
- 
-linear_model <- lm(,data=df)
 
-summary(linear_model)
+int_model_clean = int_model_df[int_model_df[["date"]] >= "2017-06-01", ]
+
+int_model_train <- int_model_clean %>% 
+  filter(date < "2020-01-01 00:00:00")
+
+int_model_test <- int_model_clean %>% 
+  filter(date >= "2020-01-01 00:00:00")
+
+int_model_train <- int_model_train[ , !(names(int_model_train) %in% c("date"))]
+
+lmModel <- lm(mean_interchange ~ . , data = int_model_train)
+
+summary(lmModel)
