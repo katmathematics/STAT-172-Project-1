@@ -35,3 +35,21 @@ int_model_train <- int_model_train[ , !(names(int_model_train) %in% c("date"))]
 lmModel <- lm(mean_interchange ~ . , data = int_model_train)
 
 summary(lmModel)
+
+
+int_model_test[["interchange_forecast"]] <- predict(lmModel, int_model_test)
+
+
+int_model_test_grp <- int_model_test %>%
+  group_by(Region) 
+
+
+ggplot()+
+  geom_line(data=int_model_test_grp,aes(y=mean_interchange,x= date,colour="Actual"),size=1 )+
+  geom_line(data=int_model_test_grp,aes(y=interchange_forecast,x= date,colour="Predicted"),size=1) +
+  scale_color_manual(name = "2020 Forecast Results", values = c("Actual" = "black", "Predicted" = "red")) +
+  facet_wrap(~ Region, scales = "free_y", ncol = 3) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(title = "Energy Demand by Region Forecast 2020 Predicted vs Actual",
+       subtitle = "ETS Model Forecasts",
+       x = "", y = "Demand")
