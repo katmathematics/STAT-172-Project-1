@@ -21,6 +21,8 @@ import glob
 # Collects data from the Bonneville Power Administration website
 def get_bpa_data(directory="data\\web_data\\bpa_data"):
 
+    print("Fetching BPA Data...")
+
     START_YEAR_BPA = 1999
     BASE_URL_BPA = "https://transmission.bpa.gov/Business/Operations/Outages/OutagesCY"
 
@@ -62,15 +64,23 @@ def get_bpa_data(directory="data\\web_data\\bpa_data"):
             filename = CleanFileName(filename)
             filename = AppendDir(filename,directory)
 
+            # Create the directory if one does not already exist
+            if not os.path.exists(filename):
+                os.makedirs(filename)
+
             SaveDataToCSV(tables_rows,tables_headers,filename)  
-                   
-    return "BPA data was accquired successfully!"
+
+    print("BPA data was accquired successfully!")
+    print("Data can be found at: ", directory)              
+    return 
 
 # Gets data about storms from the national centers for environmental information about lightning strikes
 def get_ncei_data(directory="data\\web_data\\ncei_data"):
     START_YEAR_NCEI = 1990
     BASE_URL_NCEI = "https://www.ncei.noaa.gov/pub/data/swdi/database-csv/v2/"
     RETRIEVE_FILE_ROOT = "nldn-tiles-"
+
+    print("Fetching NCEI Data...")
 
     # Keeps the loop end at the current year 
     cur_year = datetime.date.today().year
@@ -97,10 +107,15 @@ def get_ncei_data(directory="data\\web_data\\ncei_data"):
             data = clean_data[1:]
 
             new_file_name = retrieve_file.rstrip(".gz")
-            dir = AppendDir(new_file_name,"data\\web_data\\ncei_data")
+            
+            dir = AppendDir(new_file_name,directory)
+
             SaveDataToCSV(data,data_headers,dir)
         os.remove(path)
-    return "NCEI Data was accquired successfully!"
+
+        print("NCEI Data was accquired successfully!")
+        print("Data can be found at: ", directory)    
+    return 
 
 if __name__ == "__main__":
     

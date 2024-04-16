@@ -165,23 +165,7 @@ if (run_Complete_Analysis) {
   source("R/CompleteAnalysis")
 }
 
-### Not totally sure how to handle the python stuff
-#if (run_NCEI_Scraper) {
-#  source_python("Python/GetData.py")
+if (run_NCEI_Scraper) {
   system('pip install -r Python/requirements.txt')
   system('python Python/GetData.py ncei data/web_data/ncei_data')
-#  get_ncei_data()
-#}
-
-}
-
-
-# Function to execute Python script
-run_python_script <- function(script_path) {
-  source_python(script_path)
-}
-
-if (run_NCEI_Scraper) {
-  python_script_path <- "/Users/clbpt/OneDrive/Documents/GitHub/STAT-172-Project-1/Python/GetData.py"
-  run_python_script(python_script_path)
-}
+ }
