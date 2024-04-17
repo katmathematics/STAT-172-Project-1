@@ -113,8 +113,8 @@ def get_ncei_data(directory="data\\web_data\\ncei_data"):
             SaveDataToCSV(data,data_headers,dir)
         os.remove(path)
 
-        print("NCEI Data was accquired successfully!")
-        print("Data can be found at: ", directory)    
+    print("NCEI Data was accquired successfully!")
+    print("Data can be found at: ", directory)    
     return 
 
 if __name__ == "__main__":
