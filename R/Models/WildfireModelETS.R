@@ -10,8 +10,8 @@ invisible(lapply(packages, library, character.only = TRUE))
 
 
 # Read in data
-complete_data = read.csv("data/model_data/ModelDataComplete.csv")
-complete_data = select(complete_data, -c("flag","states_covered"))
+complete_data = read.csv("data/cleaned_data/WildfiresClean.csv")
+#complete_data = select(complete_data, -c("flag","states_covered"))
 df <- complete_data
 
 

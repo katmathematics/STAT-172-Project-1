@@ -10,8 +10,8 @@ invisible(lapply(packages, library, character.only = TRUE))
 
 
 # Read in data
-complete_data = read.csv("data/model_data/ModelDataComplete.csv")
-complete_data = select(complete_data, -c("flag","states_covered"))
+complete_data = read.csv("data/cleaned_data/NCEICountiesClean.csv")
+#complete_data = select(complete_data, -c("flag","states_covered"))
 df <- complete_data
 
 
@@ -22,10 +22,10 @@ lit_model_df <- df %>%
   summarize(sum_lightning = mean(sum_lightning))
 
 lit_model_train <- lit_model_df %>% 
-  filter(date < "2020-01-01 00:00:00")
+  filter(date < "2022-09-01 00:00:00")
 
 lit_model_test <- lit_model_df %>% 
-  filter(date >= "2020-01-01 00:00:00")
+  filter(date >= "2022-09-01 00:00:00")
 
 lit_model_train_nest <- lit_model_train %>%
   group_by(state) %>%

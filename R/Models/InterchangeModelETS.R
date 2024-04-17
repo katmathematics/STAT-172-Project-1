@@ -1,3 +1,5 @@
+# Author(s) (ordered by contribution): Katja Mathesius
+
 # Install packages if not installed, then load packages
 packages <- c('tidyverse','ggplot2','zoo','dplyr','smooth','timetk','forecast','tidyquant','sweep','Metrics')
 installed_packages <- packages %in% rownames(installed.packages())
@@ -8,10 +10,9 @@ invisible(lapply(packages, library, character.only = TRUE))
 
 
 # Read in data
-complete_data = read.csv("data/model_data/ModelDataComplete.csv")
-complete_data = select(complete_data, -c("flag","states_covered"))
+complete_data = read.csv("data/cleaned_data/EIAInterchangeClean.csv")
+#complete_data = select(complete_data, -c("flag","states_covered"))
 df <- complete_data
-
 
 ### Predicting Interchange
 # Based on: https://cran.rstudio.com/web/packages/sweep/vignettes/SW01_Forecasting_Time_Series_Groups.html
@@ -21,10 +22,10 @@ int_model_df <- df %>%
   summarize(mean_interchange = mean(mean_interchange))
 
 int_model_train <- int_model_df %>% 
-  filter(date < "2020-01-01 00:00:00")
+  filter(date < "2023-01-01 00:00:00")
 
 int_model_test <- int_model_df %>% 
-  filter(date >= "2020-01-01 00:00:00")
+  filter(date >= "2023-01-01 00:00:00")
 
 int_model_train_nest <- int_model_train %>%
   group_by(Region) %>%
@@ -119,9 +120,9 @@ mae(int_model_test$mean_interchange, int_model_test$interchange_forecast)
 ggplot()+
   geom_line(data=int_model_test_grp,aes(y=mean_interchange,x= date,colour="Actual"),size=1 )+
   geom_line(data=int_model_test_grp,aes(y=interchange_forecast,x= date,colour="Predicted"),size=1) +
-  scale_color_manual(name = "2020 Forecast Results", values = c("Actual" = "black", "Predicted" = "red")) +
+  scale_color_manual(name = "2023-2024 Forecast Results", values = c("Actual" = "black", "Predicted" = "red")) +
   facet_wrap(~ Region, scales = "free_y", ncol = 3) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  labs(title = "Energy Demand by Region Forecast 2020 Predicted vs Actual",
+  labs(title = "Energy Demand by Region Forecast 2023-2024 Predicted vs Actual",
        subtitle = "ETS Model Forecasts",
        x = "", y = "Demand")
