@@ -1,6 +1,7 @@
 rm(list = ls())
 
 install.packages("ggfortify")
+
 library(DBI)
 library(RSQLite)
 library(dplyr)
