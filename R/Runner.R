@@ -141,6 +141,11 @@ if (run_EIA_Analysis) {
   source("R/EIAAnalysis.R")
 }
 
+if (run_NCEI_Scraper) {
+  system('pip install -r Python/requirements.txt')
+  system('python Python/GetData.py ncei data/web_data/ncei_data')
+}
+
 if (run_NCEI_Cleaning) {
   source("R/NCEILightningCleaning.R")
 }  
@@ -164,8 +169,3 @@ if (run_Merge_Data_Sources) {
 if (run_Complete_Analysis) {
   source("R/CompleteAnalysis")
 }
-
-if (run_NCEI_Scraper) {
-  system('pip install -r Python/requirements.txt')
-  system('python Python/GetData.py ncei data/web_data/ncei_data')
- }
