@@ -22,10 +22,10 @@ lit_model_df <- df %>%
   summarize(sum_lightning = mean(sum_lightning))
 
 lit_model_train <- lit_model_df %>% 
-  filter(date < "2022-09-01 00:00:00")
+  filter(date < "2023-01-01 00:00:00")
 
 lit_model_test <- lit_model_df %>% 
-  filter(date >= "2022-09-01 00:00:00")
+  filter(date >= "2023-01-01 00:00:00")
 
 lit_model_train_nest <- lit_model_train %>%
   group_by(state) %>%
@@ -114,16 +114,54 @@ lit_model_test
 lit_model_test_grp <- lit_model_test %>%
   group_by(state) 
 
-# Check the Mean Absolute Error
+# Check the Mean Absolute/Squared Error
 lit_model_test_complete <- lit_model_test[complete.cases(lit_model_test), ]
 mae(lit_model_test_complete$sum_lightning, lit_model_test_complete$lightning_forecast)
+mse(lit_model_test_complete$sum_lightning, lit_model_test_complete$lightning_forecast)
 
-ggplot()+
-  geom_line(data=lit_model_test_grp,aes(y=sum_lightning,x= date,colour="Actual"),size=1 )+
-  geom_line(data=lit_model_test_grp,aes(y=lightning_forecast,x= date,colour="Predicted"),size=1) +
-  scale_color_manual(name = "2020 Forecast Results", values = c("Actual" = "black", "Predicted" = "red")) +
-  facet_wrap(~ state, scales = "free_y", ncol = 3) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  labs(title = "Lightning States Forecast 2020 Predicted vs Actual",
-       subtitle = "ETS Model Forecasts",
-       x = "", y = "Demand")
+rae(lit_model_test_complete$sum_lightning, lit_model_test_complete$lightning_forecast)
+
+
+
+# For condensing the data to plot
+lit_plot_forecast_data_short <- lit_model_test_complete %>%
+  group_by(state) %>%
+  summarize(lightning_forecast = sum(lightning_forecast))
+
+lit_plot_real_data_short <- lit_model_test_complete %>%
+  group_by(state) %>%
+  summarize(sum_lightning = sum(sum_lightning))
+
+# Plot the data
+states_map <- map_data("state")
+ggplot(lit_plot_real_data_short, aes(map_id = state)) + 
+  geom_map(aes(fill = sum_lightning), map = states_map) +
+  scale_fill_gradientn(colors=c("#0072B2","#000000")) + 
+  expand_limits(x = states_map$long, y = states_map$lat) + 
+  borders("state", colour = "#222222") + 
+  labs(fill='# Lightning Strikes', title = "Real Annual Total Lightning Strikes (Jan 2023-Dec 2023)") +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank())
+
+
+# Plot the data
+states_map <- map_data("state")
+ggplot(lit_plot_forecast_data_short, aes(map_id = state)) + 
+  geom_map(aes(fill = lightning_forecast), map = states_map) +
+  scale_fill_gradientn(colors=c("#0072B2","#000000")) + 
+  expand_limits(x = states_map$long, y = states_map$lat) + 
+  borders("state", colour = "#222222") + 
+  labs(fill='# Lightning Strikes', title = "Predicted Annual Total Lightning Strikes (Jan 2023-Dec 2023)") +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank())
+
+# Write the Predictions
+write.csv(lit_model_test_complete, "data/prediction_data/LightningPredictionsETS.csv", row.names=FALSE, quote=FALSE)

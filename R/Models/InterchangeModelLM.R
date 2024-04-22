@@ -25,10 +25,10 @@ for(lag_val in 12:23) {
 int_model_clean = int_model_df[int_model_df[["date"]] >= "2017-06-01", ]
 
 int_model_train <- int_model_clean %>% 
-  filter(date < "2023-01-01 00:00:00")
+  filter(date < "2023-03-01 00:00:00")
 
 int_model_test <- int_model_clean %>% 
-  filter(date >= "2023-01-01 00:00:00")
+  filter(date >= "2023-03-01 00:00:00")
 
 int_model_train <- int_model_train[ , !(names(int_model_train) %in% c("date"))]
 
@@ -39,10 +39,12 @@ summary(lmModel)
 
 int_model_test[["interchange_forecast"]] <- predict(lmModel, int_model_test)
 
-
 int_model_test_grp <- int_model_test %>%
   group_by(Region) 
 
+int_plot_data = select(int_model_test_grp, c("Region","date","mean_interchange","interchange_forecast"))
+mae(int_plot_data$mean_interchange, int_plot_data$interchange_forecast)
+rae(int_plot_data$mean_interchange, int_plot_data$interchange_forecast)
 
 ggplot()+
   geom_line(data=int_model_test_grp,aes(y=mean_interchange,x= date,colour="Actual"),size=1 )+
