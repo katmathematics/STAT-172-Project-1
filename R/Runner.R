@@ -129,6 +129,7 @@ mainDir = getwd()
 dir.create(file.path(mainDir, "data/compressed_raw_data"), showWarnings = FALSE)
 dir.create(file.path(mainDir, "data/cleaned_data"), showWarnings = FALSE)
 dir.create(file.path(mainDir, "data/model_data"), showWarnings = FALSE)
+dir.create(file.path(mainDir, "data/prediction_data"), showWarnings = FALSE)
 
 # Runs any files configured to run
 if (run_BPA_Scraper) {

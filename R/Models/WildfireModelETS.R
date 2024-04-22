@@ -14,6 +14,13 @@ complete_data = read.csv("data/cleaned_data/WildfiresClean.csv")
 #complete_data = select(complete_data, -c("flag","states_covered"))
 df <- complete_data
 
+# Read the lightning data's date as a date
+df$date <- as.character(df$date)
+df$date <- paste("01",df$date)
+df$date <- gsub('-', ' ', df$date)
+df$date <- format(as.Date(df$date, format =  '%d %b %y'), '%b %Y')
+str(df)
+
 
 
 ### Predicting Wildfires
@@ -71,7 +78,7 @@ augment_fit_ets_fir %>%
   facet_wrap(~ state, scale = "free_y", ncol = 3) +
   theme(axis.text.x = element_text(angle = 50, hjust=1))
 
-# Forecast Interchange
+# Forecast Fires
 fir_model_train_nest_fcast <- fir_model_train_nest_fit %>%
   mutate(fcast.ets = map(fit.ets, forecast, h = 12))
 fir_model_train_nest_fcast
@@ -88,7 +95,7 @@ fir_model_train_nest_fcast_tidy %>%
   geom_ribbon(aes(ymin = lo.80, ymax = hi.80, fill = key), 
               fill = "#596DD5", color = NA, size = 0, alpha = 0.8) +
   geom_line() +
-  labs(title = "Lightning Occurences by State Forecast",
+  labs(title = "Wildfire Occurences by State Forecast",
        subtitle = "ETS Model Forecasts",
        x = "", y = "Occurences") +
   scale_color_tq() +
@@ -117,7 +124,7 @@ fir_model_test_grp <- fir_model_test %>%
 # Check the Mean Absolute Error
 fir_model_test_complete <- fir_model_test[complete.cases(fir_model_test), ]
 mae(fir_model_test_complete$sum_wildfires, fir_model_test_complete$wildfire_forecast)
-
+rae(fir_model_test_complete$sum_wildfires, fir_model_test_complete$wildfire_forecast)
 
 ggplot()+
   geom_line(data=fir_model_test_grp,aes(y=sum_wildfires,x= date,colour="Actual"),size=1 )+

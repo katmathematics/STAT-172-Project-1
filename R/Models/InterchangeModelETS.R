@@ -1,7 +1,7 @@
 # Author(s) (ordered by contribution): Katja Mathesius
 
 # Install packages if not installed, then load packages
-packages <- c('tidyverse','ggplot2','zoo','dplyr','smooth','timetk','forecast','tidyquant','sweep','Metrics')
+packages <- c('tidyverse','ggplot2','zoo','dplyr','smooth','timetk','forecast','tidyquant','sweep','Metrics','data.table')
 installed_packages <- packages %in% rownames(installed.packages())
 if (any(installed_packages == FALSE)) {
   install.packages(packages[!installed_packages])
@@ -22,10 +22,10 @@ int_model_df <- df %>%
   summarize(mean_interchange = mean(mean_interchange))
 
 int_model_train <- int_model_df %>% 
-  filter(date < "2023-01-01 00:00:00")
+  filter(date < "2023-02-01 00:00:00")
 
 int_model_test <- int_model_df %>% 
-  filter(date >= "2023-01-01 00:00:00")
+  filter(date >= "2023-02-01 00:00:00")
 
 int_model_train_nest <- int_model_train %>%
   group_by(Region) %>%
@@ -115,14 +115,83 @@ int_model_test_grp <- int_model_test %>%
   group_by(Region) 
 
 # Check the Mean Absolute Error
-mae(int_model_test$mean_interchange, int_model_test$interchange_forecast)
+mae(int_model_test_grp$mean_interchange, int_model_test_grp$interchange_forecast)
+rae(int_model_test_grp$mean_interchange, int_model_test_grp$interchange_forecast)
 
-ggplot()+
-  geom_line(data=int_model_test_grp,aes(y=mean_interchange,x= date,colour="Actual"),size=1 )+
-  geom_line(data=int_model_test_grp,aes(y=interchange_forecast,x= date,colour="Predicted"),size=1) +
-  scale_color_manual(name = "2023-2024 Forecast Results", values = c("Actual" = "black", "Predicted" = "red")) +
-  facet_wrap(~ Region, scales = "free_y", ncol = 3) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  labs(title = "Energy Demand by Region Forecast 2023-2024 Predicted vs Actual",
-       subtitle = "ETS Model Forecasts",
-       x = "", y = "Demand")
+# List of states the stack overflow wanted me to create
+states <- c("california","texas","florida","maine","vermont","new hampshire",
+            "massachusetts","connecticut","rhode island","new york","kentucky",
+            "ohio","west virginia","virginia","pennsylvania","maryland","delaware",
+            "new jersey","tennessee","north carolina","south carolina",
+            "georgia","alabama","mississippi","arkansas","louisiana","missouri",
+            "illinois","iowa","wisconsin","indiana","michigan","minnesota","oklahoma",
+            "kansas","south dakota","north dakota","washington","oregon","idaho","utah",
+            "wyoming","montana","colorado","arizona","new mexico","nevada")
+
+# Expand all the regions to mention the specific states they cover
+int_model_test_grp$states_covered <- str_replace(int_model_test_grp$Region, "CAL", "california")
+int_model_test_grp$states_covered <- str_replace(int_model_test_grp$states_covered, "TEX", "texas")
+int_model_test_grp$states_covered <- str_replace(int_model_test_grp$states_covered, "FLA", "florida")
+int_model_test_grp$states_covered <- str_replace(int_model_test_grp$states_covered, "NE", "maine_vermont_new hampshire_massachusetts_connecticut_rhode island")
+int_model_test_grp$states_covered <- str_replace(int_model_test_grp$states_covered, "NY", "new york")
+int_model_test_grp$states_covered <- str_replace(int_model_test_grp$states_covered, "MIDA", "kentucky_ohio_west virginia_virginia_pennsylvania_maryland_delaware_new jersey")
+int_model_test_grp$states_covered <- str_replace(int_model_test_grp$states_covered, "TEN", "tennessee")
+int_model_test_grp$states_covered <- str_replace(int_model_test_grp$states_covered, "CAR", "north carolina_south carolina")
+int_model_test_grp$states_covered <- str_replace(int_model_test_grp$states_covered, "SE", "georgia_alabama")
+int_model_test_grp$states_covered <- str_replace(int_model_test_grp$states_covered, "MIDW", "mississippi_arkansas_louisiana_missouri_illinois_iowa_wisconsin_indiana_michigan_minnesota")
+int_model_test_grp$states_covered <- str_replace(int_model_test_grp$states_covered, "CENT", "oklahoma_kansas_south dakota_north dakota_nebraska")
+int_model_test_grp$states_covered <- str_replace(int_model_test_grp$states_covered, "NW", "washington_oregon_idaho_utah_wyoming_montana_colorado")
+int_model_test_grp$states_covered <- str_replace(int_model_test_grp$states_covered, "SW", "arizona_new mexico_nevada")
+
+int_model_test_grp$states_covered <- as.list(strsplit(int_model_test_grp$states_covered,"_"))
+
+int_model_test_states <- tidyr::unnest(int_model_test_grp, cols = states_covered)
+
+
+
+
+#int_plot_data <- int_model_test_states %>% mutate(absolute_error = abs(abs(mean_interchange)-abs(interchange_forecast)))
+int_plot_data <- int_model_test_states[complete.cases(int_model_test_states), ]
+
+# For condensing the data to plot
+int_plot_forecast_data_short <- int_plot_data %>%
+  group_by(states_covered) %>%
+  summarize(interchange_forecast = mean(interchange_forecast))
+
+int_plot_real_data_short <- int_plot_data %>%
+  group_by(states_covered) %>%
+  summarize(mean_interchange = mean(mean_interchange))
+
+# Plot the data
+states_map <- map_data("state")
+ggplot(int_plot_real_data_short, aes(map_id = states_covered)) + 
+  geom_map(aes(fill = mean_interchange), map = states_map) +
+  scale_fill_gradientn(colors=c("#000000","#0072B2")) + 
+  expand_limits(x = states_map$long, y = states_map$lat) + 
+  borders("state", colour = "#222222") + 
+  labs(fill='Excess/Deficit Energy', title = "Avg. Real Energy Demand (Feb 2023-Jan 2024)") +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank())
+  
+
+# Plot the data
+states_map <- map_data("state")
+ggplot(int_plot_forecast_data_short, aes(map_id = states_covered)) + 
+  geom_map(aes(fill = interchange_forecast), map = states_map) +
+  scale_fill_gradientn(colors=c("#000000","#0072B2")) + 
+  expand_limits(x = states_map$long, y = states_map$lat) + 
+  borders("state", colour = "#222222") + 
+  labs(fill='Excess/Deficit Energy', title = "Avg. Predicted Energy Demand (Feb 2023-Jan 2024)") +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank())
+
+# Write the Predictions
+write.csv(int_plot_data, "data/prediction_data/InterchangePredictionsETS.csv", row.names=FALSE, quote=FALSE)
