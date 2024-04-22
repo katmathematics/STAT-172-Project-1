@@ -124,6 +124,15 @@ if (RUN_INTERACTIVELY) {
 }
 
 
+# Create all the directories we need
+mainDir = getwd()
+dir.create(file.path(mainDir, "data/compressed_raw_data"), showWarnings = FALSE)
+dir.create(file.path(mainDir, "data/cleaned_data"), showWarnings = FALSE)
+dir.create(file.path(mainDir, "data/model_data"), showWarnings = FALSE)
+dir.create(file.path(mainDir, "data/prediction_data"), showWarnings = FALSE)
+dir.create(file.path(mainDir, "data/web_data/ncei_data"), showWarnings = FALSE)
+dir.create(file.path(mainDir, "data/web_data/bpa_data"), showWarnings = FALSE)
+
 # Runs any files configured to run
 if (run_BPA_Scraper) {
   source("R/BPAScrapingCleaning.R")
@@ -141,13 +150,14 @@ if (run_EIA_Analysis) {
   source("R/EIAAnalysis.R")
 }
 
+if (run_NCEI_Scraper) {
+  system('pip install -r Python/requirements.txt')
+  system('python Python/GetData.py ncei data/web_data/ncei_data')
+}
+
 if (run_NCEI_Cleaning) {
   source("R/NCEILightningCleaning.R")
 }  
-  
-if (run_NCEI_Analysis) {
-  source("R/NCEILightningAnalysis.R")
-}
   
 if (run_Wildfire_Cleaning) {
   source("R/WildfireCleaning.R")
@@ -164,8 +174,3 @@ if (run_Merge_Data_Sources) {
 if (run_Complete_Analysis) {
   source("R/CompleteAnalysis")
 }
-
-if (run_NCEI_Scraper) {
-  system('pip install -r Python/requirements.txt')
-  system('python Python/GetData.py ncei data/web_data/ncei_data')
- }

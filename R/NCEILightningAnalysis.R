@@ -33,7 +33,7 @@ raw_data = read.csv("data/compressed_raw_data/NCEICountiesCompressed.csv")
 lightning_monthly_count <- raw_data %>%
   mutate(date = zoo::as.yearmon(date)) %>%
   group_by(date, state_county, county) %>%
-  summarize(sum_lightning = sum(TOTAL_COUNT))a
+  summarize(sum_lightning = sum(TOTAL_COUNT))
 
 # Write the Compressed Data 
 write.csv(lightning_monthly_count, "data/cleaned_data/NCEICountiesClean.csv", row.names=FALSE, quote=FALSE)

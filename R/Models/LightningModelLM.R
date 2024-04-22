@@ -29,10 +29,10 @@ for(lag_val in 12:23) {
 lit_model_clean = lit_model_df[lit_model_df[["date"]] >= "2017-06-01", ]
 
 lit_model_train <- lit_model_df %>% 
-  filter(date < "2022-09-01 00:00:00")
+  filter(date < "2023-01-01 00:00:00")
 
 lit_model_test <- lit_model_df %>% 
-  filter(date >= "2022-09-01 00:00:00")
+  filter(date >= "2023-01-01 00:00:00")
 
 lit_model_train <- lit_model_train[ , !(names(lit_model_train) %in% c("date"))]
 
@@ -47,18 +47,24 @@ lit_model_test[["lightning_forecast"]] <- predict(lmModel, lit_model_test)
 lit_model_test_grp <- lit_model_test %>%
   group_by(state) 
 
+
+
+
+
 lit_plot_data = select(lit_model_test_grp, c("state","date","sum_lightning","lightning_forecast"))
+mae(lit_plot_data$sum_lightning, lit_plot_data$lightning_forecast)
+rae(lit_plot_data$sum_lightning, lit_plot_data$lightning_forecast)
+
 
 lit_plot_data <- lit_plot_data %>% mutate(absolute_error = abs(abs(sum_lightning)-abs(lightning_forecast)))
 
 lit_plot_data = select(lit_plot_data, c("state","date","absolute_error"))
 
+# For condensing the data to plot like a bar chart
 lit_plot_data_short <- lit_plot_data %>%
   group_by(state) %>%
   summarize(absolute_error = mean(absolute_error))
 
-g <- ggplot(lit_plot_data_short) +
-  geom_polygon(aes(fill=absolute_error)) +
-  scale_fill_distiller("water level", palette="Spectral") +
-  ggtitle("Water by State")
-g
+
+# Write the Predictions
+write.csv(lit_plot_data, "data/prediction_data/LightningPredictionsLM.csv", row.names=FALSE, quote=FALSE)
