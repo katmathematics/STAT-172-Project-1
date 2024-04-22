@@ -70,6 +70,7 @@ merged_data$states_covered <- gsub(" ", "-", merged_data$states_covered)
 EIA_NCEI_data <- merged_data
 EIA_NCEI_data$flag <- mapply(grepl, EIA_NCEI_data$state, EIA_NCEI_data$states_covered)
 EIA_NCEI_data <- EIA_NCEI_data[EIA_NCEI_data$flag == TRUE,]
+EIA_NCEI_data = select(EIA_NCEI_data, -c("flag"))
 
 # Merge in the wildfire data
 colnames(EIA_NCEI_data)[names(EIA_NCEI_data) == "date_date"] <- "date"

@@ -1,7 +1,7 @@
 # Author(s) (ordered by contribution): Katja Mathesius
-
+install.packages("xts")
 # Install packages if not installed, then load packages
-packages <- c("ggplot2", "dplyr")
+packages <- c("ggplot2", "dplyr", "xts")
 installed_packages <- packages %in% rownames(installed.packages())
 if (any(installed_packages == FALSE)) {
   install.packages(packages[!installed_packages])
@@ -155,4 +155,5 @@ ggplot(data=BPA_CSI_UNC_SRS, aes(x=Cause, fill = DurationType)) +
   labs(title = "Uncommonly Occuring Failure Causes") #+ 
   #facet_wrap(~O.MDistrict, ncol = 3)
 
-ggsave("plot.png")
+ggsave("data_visualizations/BPA_visualizations/Uncommon_Severe_Failures_Visual.png")
+1

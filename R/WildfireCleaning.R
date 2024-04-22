@@ -1,5 +1,7 @@
 rm(list = ls())
 
+install.packages("RSQLite")
+
 library(DBI)
 library(RSQLite)
 library(dplyr)
