@@ -21,11 +21,12 @@ lit_model_df <- df %>%
   group_by(date,state) %>%
   summarize(sum_lightning = mean(sum_lightning))
 
-lit_model_train <- lit_model_df %>% 
-  filter(date < "2023-01-01 00:00:00")
 
-lit_model_test <- lit_model_df %>% 
-  filter(date >= "2023-01-01 00:00:00")
+fir_model_train <- fir_model_clean %>% 
+  filter(date < "2019-01-01 00:00:00")
+
+fir_model_test <- fir_model_clean %>% 
+  filter(date >= "2019-01-01 00:00:00")
 
 lit_model_train_nest <- lit_model_train %>%
   group_by(state) %>%
