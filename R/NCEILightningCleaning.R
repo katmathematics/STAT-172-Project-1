@@ -10,7 +10,7 @@ if (any(installed_packages == FALSE)) {
 invisible(lapply(packages, library, character.only = TRUE))
 
 #install.packages("maptools", repos = "https://packagemanager.posit.co/cran/2023-10-13")
-library(maptools)
+#library(maptools)
 
 # Function for converting longitude and latitude to US counties
 lonlat_to_county_sp <- function(pointsDF) {
