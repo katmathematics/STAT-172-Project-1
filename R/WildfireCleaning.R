@@ -1,12 +1,12 @@
-rm(list = ls())
+# Author(s) (ordered by contribution): Hming Zama
 
-install.packages("RSQLite")
-
-library(DBI)
-library(RSQLite)
-library(dplyr)
-library(zoo)
-library(readr)
+# Install packages if not installed, then load packages
+packages <- c('RSQLite', 'DBI','dplyr','zoo','readr')
+installed_packages <- packages %in% rownames(installed.packages())
+if (any(installed_packages == FALSE)) {
+  install.packages(packages[!installed_packages])
+}
+invisible(lapply(packages, library, character.only = TRUE))
 
 
 #----Reading in the Data----

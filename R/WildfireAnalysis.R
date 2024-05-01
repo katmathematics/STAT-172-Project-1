@@ -1,20 +1,12 @@
-rm(list = ls())
+# Author(s) (ordered by contribution): Hming Zama
 
-install.packages("ggfortify")
-
-library(DBI)
-library(RSQLite)
-library(dplyr)
-library(ggplot2)
-library(xts)
-library(ggfortify)  # For autoplot function
-library(sf)
-library(zoo)
-library(viridis) #color pallette
-library(maps)
-library(mapview)
-library(scales)
-
+# Install packages if not installed, then load packages
+packages <- c('RSQLite', 'DBI','dplyr','zoo','readr','ggplot2','xts','ggfortify','sf','viridis','maps','mapview','scales')
+installed_packages <- packages %in% rownames(installed.packages())
+if (any(installed_packages == FALSE)) {
+  install.packages(packages[!installed_packages])
+}
+invisible(lapply(packages, library, character.only = TRUE))
 
 #----Reading in the Data----
 #sqlite_file <- "FPA_FOD_20221014.sqlite"
