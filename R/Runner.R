@@ -3,7 +3,7 @@
 # Description: An analysis aiming to utilize publicly available information about grid demand and
 #              commonly occurring risks to the grid in order to evaluate ideal locations to expand
 #              resources into
-# Active Maintenance Time frame: Feb 2024-May 2024
+# Active Maintenance Time Frame: Feb 2024-May 2024
 # Github: https://github.com/katmathematics/STAT-190-Project-1
 
 # Clear the environment
