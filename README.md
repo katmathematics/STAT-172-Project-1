@@ -1,5 +1,5 @@
 # Analyzing Hazard Data for Optimal Expansion of the U.S. Electrical Grid
-- ### Contributors: Katja Mathesius, Caleb Patterson, Hming Zama
+- ### Contributors: [Katja Mathesius](https://github.com/katmathematics), [Caleb Patterson](https://www.linkedin.com/in/caleb-patterson-39bb7b227/), [Hmingthan Zama](https://www.linkedin.com/in/hmingthan-zama-b124191a4/)
 - ### Active Development Period: February 2024 - May 2024
 - ### Motivating Source: (STAT 190) Case Studies in Data Analytics
 
@@ -7,9 +7,9 @@
 {Placeholder}
 
 ## Data Sets Used
-- [BPA Data]()
+- [Bonneville Power Administration Outage Data](https://transmission.bpa.gov/Business/Operations/Outages/default.aspx)
 - [Hourly Interchange Data](https://www.eia.gov/electricity/gridmonitor/dashboard/electric_overview/US48/US48)
-- [Lightning Data]()
+- [National Centers for Environmental Information Lightning Data](https://www.ncei.noaa.gov/pub/data/swdi/database-csv/v2/)
 - [2.3 Million Wildfires](https://www.kaggle.com/datasets/braddarrow/23-million-wildfires?resource=download)
 
 ---
@@ -19,9 +19,9 @@ After downloading this repository, the following instructions are designed to he
 
 ### Language Requirements
 The following languages are required to run this repository:
-- R >= 4.4.0
+- __R__ >= __4.4.0__
     - If you don't already have RStudio installed, we recommend it for ease of interaction with this project. If you have a prefered IDE however, you may also use that. 
-- Python >= 3.12.3
+- __Python__ >= __3.12.3__
 
 
 ### Manual Data Requirements
@@ -41,3 +41,8 @@ In order to successfuly run this analysis code, 2 data sets must be manually dow
     3. Go through each year and download any .csv files labeled as "interchange"
     4. After downloading the interchange files for all available years, go over to where the repository is downloaded and create a new folder titled __"interchange_data"__ under __"data/web_data/"__
     5. Move all of the downloaded interchange .csv files into the new "interchange_data" folder. The project should now have access to the data utilized for interchange forecasting.
+
+
+---
+- _ReadMe File written by: Katja Mathesius_
+- _This repository will not be supported after its active development period. Please refrain from contacting the creators with any questions or bug reports found in this repository_
