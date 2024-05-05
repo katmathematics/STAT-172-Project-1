@@ -8,9 +8,9 @@ One of the major problems facing energy companies is how to balance expanding th
 
 ## Data Sets Used
 - [Bonneville Power Administration Outage Data](https://transmission.bpa.gov/Business/Operations/Outages/default.aspx)
-- [Hourly Interchange Data](https://www.eia.gov/electricity/gridmonitor/dashboard/electric_overview/US48/US48)
+- [U.S. Energy Information Administration Hourly Interchange Data](https://www.eia.gov/electricity/gridmonitor/dashboard/electric_overview/US48/US48)
 - [National Centers for Environmental Information Lightning Data](https://www.ncei.noaa.gov/pub/data/swdi/database-csv/v2/)
-- [2.3 Million Wildfires](https://www.kaggle.com/datasets/braddarrow/23-million-wildfires?resource=download)
+- [U.S. Department of Agriculture 2.3 Million Wildfires](https://www.kaggle.com/datasets/braddarrow/23-million-wildfires?resource=download)
 
 ---
 
@@ -109,11 +109,21 @@ The R folder stores all R code for the project. This is the primary folder for t
 - Runner.R
     - This file serves as an easy way to run every file in the project sequentially. It contains an interactive configuration mode to guide those just getting started with the project, but this interactive feature can also be disabled through a binary variable within the file and the control variables for which files to run configured quickly to run sets of project files quickly and easily. Notably this file goes through all the other R scripts in the project, as well as having code for executing the python scraper file in order to pull data from the National Centers for Environmental Information. 
 - BPAScrapingCleaning.R
+   - This file scrapes data from the Bonneville Power Administration website pertaining to power outages and cleans it for use in the BPA analysis file. BPA Outage data is not used in the final predictive model, but was instead used to inform common causes of power outages.
 - BPAAnalysis.R
+   - Creates histograms of causes of power outages, broken down by how long the outage was, and seperated into two seperate plots based on how common the outages are. It should be noted that the causes we choose to analyze in this project: wildfires, and lightning strikes, are considered "uncommon" causes of outages, but are still the analysis choice as the "common" causes are largely planned, part failure, or forseeably human caused outages. 
 - EIACleaning.R
+    - Cleans interchange data from the U.S. Energy Information Administration. Interchange is a stand in for grid demand, and represents how much energy regions imported or exported. Regions that import a lot of energy have a defict in supply, and thus high demand. Interchange is cleaned by taking as the average of the interchange over the month to reduce the data scope and in order to see what typically demand looks like for a region in any given month. 
 - EIAAnalysisl.R
+   - Generates a visualization of what the average interchange value in regions looks like.
+- NCEILightningCleaning.R
+   - {these files need to be further evaluated}
+- NCEILightningAnalysis.R
+   - {these files need to be further evaluated}
 - WildfireCleaning.R
+   - Processes the wildfire data in order to clean data that is originally on a daily longitude/latitude scale into a sum over a state per month in order to be more easily processed on weaker hardware
 - WildfireAnalysis.R
+   -  Generates a series of cursory visualizations into what the wildfire data looks like
 - MergeDataSources.R
     - This cleaning file combined the cleaned data for monthly average interchange, monthly lightning strike occurences, and monthly wildfire occurences into one singular data file. It modifies the data such that each row contains the total lightning and wildfire occurences for the state for the month, as well as the average interchange for the region the state is located in for the month.
 - CompleteAnalysis.R
