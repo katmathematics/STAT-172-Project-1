@@ -1,7 +1,7 @@
 # Analyzing Hazard Data for Optimal Expansion of the U.S. Electrical Grid
 - ### Contributors: [Katja Mathesius](https://github.com/katmathematics), [Caleb Patterson](https://www.linkedin.com/in/caleb-patterson-39bb7b227/), [Hmingthan Zama](https://www.linkedin.com/in/hmingthan-zama-b124191a4/)
 - ### Active Development Period: February 2024 - May 2024
-- ### Motivating Source: (STAT 190) Case Studies in Data Analytics as supervised by [Lendie R. Follet](https://www.drake.edu/zimpleman/about/facultystaff/facultybydepartment/lendierfollett/)
+- ### Motivating Source: (STAT 190) Case Studies in Data Analytics as supervised by [Lendie R. Follett](https://www.drake.edu/zimpleman/about/facultystaff/facultybydepartment/lendierfollett/)
 
 ## Description
 One of the major problems facing energy companies is how to balance expanding their energy grid with the many risks that pose a threat to the grid. Across any region of interest for expansion is an existing pattern of demand for energy. However, there is also a complex system of threats to the grid, such as lightning and wildfires, that occur more or less frequently in certain locations. This project analyzes data regarding outages, energy demand, common risks to the energy grid from the contiguous United States and creates predictive models for discerning where in the future is likely to be low risk, high demand locations to put new grid resources
@@ -39,7 +39,7 @@ In order to successfuly run this analysis code, 2 data sets must be manually dow
     1. Go to the U.S. Energy Information Administration's Hourly Electric Grid Monitor Dashboard and click the "Download Data" button
     2. Select the "Six-Month Files" tab at the top. You should now see a screen with a bunch of tabs for years, and links to download .csv files for "balance" "interchange" or "subregion"
     3. Go through each year and download any .csv files labeled as "interchange"
-    4. After downloading the interchange files for all available years, go over to where the repository is downloaded and create a new folder titled __"eia_data"__ under __"data/web_data/"__
+    4. After downloading the interchange files for all available years, go over to where the repository is installed and create a new folder titled __"eia_data"__ under __"data/web_data/"__
     5. Inside the __"eia_data"__ folder, create a folder titled __"interchange"__
     6. Move all of the downloaded interchange .csv files into the new "interchange_data" folder. The project should now have access to the data utilized for interchange forecasting.
 
@@ -54,11 +54,11 @@ After downloading the two manual data files, the quickest and most straight forw
 1. Open the __STAT-190-Project-1.RProj__ file that was included in the repository in RStudio
 2. From R studio, open __Runner.R__
 3. Towards the top of the file, find the binary variable __RUN_INTERACTIVELY__ and set it to TRUE
-    - __RUN_INTERACTIVELY__ controls whether or not you wish to go through an interactive, command-line based process for selecting which files you wish to run. If you haven't run the project before we recommend going through this process to better understand what goes into the running of this project. However, if you already know which files you want to run, you may set __RUN_INTERACTIVELY__ to FALSE and then manually configure the binary variables that determine which files should be run.
+    - __RUN_INTERACTIVELY__ controls whether or not you wish to go through an interactive, command-line based process for selecting which files you wish to run. If you haven't run the project before we recommend going through this process to better understand what goes into the running of this project. However, if you already know which files you wish to run, you may set __RUN_INTERACTIVELY__ to FALSE and then manually configure the binary variables that determine which files should be run.
 4. Run the entire R project file. After going through the interactive configuration process on the command line, any files you selected will be run. If you agreed to run every file, which is recommended for first time set up, the code may take up to an hour to execute
 
 ### Detailed Instructions
-This section contains a detailed breakdown of the repository's contents. This section is intended to serve as a guide for anyone interested in getting into the specific details of this project. 
+This section contains a detailed breakdown of the repository's contents. Its contents is intended to serve as a guide for anyone interested in getting into the specific details of this project. 
 
 #### File Structure 
 Below is what the structure of the repository looks like after running the code and generating the additional "data" folder and its subdirectories
