@@ -45,11 +45,11 @@ In order to successfuly run this analysis code, 2 data sets must be manually dow
 
 ## Instructions for Running the Project
 
-### Quick Start - Dashboard
-{To be added upon completion of the dashboard}
-
 ### Quick Start - Analysis
 After downloading the two manual data files, the quickest and most straight forward way to run the analysis is through the included runner file "Runner.R"
+
+### Quick Start - Dashboard
+{To be added upon completion of the dashboard}
 
 1. Open the __STAT-190-Project-1.RProj__ file that was included in the repository in RStudio
 2. From R studio, open __Runner.R__
