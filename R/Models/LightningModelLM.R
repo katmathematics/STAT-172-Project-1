@@ -49,8 +49,6 @@ lit_model_test_grp <- lit_model_test %>%
 
 
 
-
-
 lit_plot_data = select(lit_model_test_grp, c("state","date","sum_lightning","lightning_forecast"))
 mae(lit_plot_data$sum_lightning, lit_plot_data$lightning_forecast)
 rae(lit_plot_data$sum_lightning, lit_plot_data$lightning_forecast)

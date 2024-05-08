@@ -18,17 +18,19 @@ df <- complete_data
 ### Predicting Lightning
 lit_model_df <- df %>%
   mutate(date = zoo::as.yearmon(date)) %>%
-  group_by(date,state) %>%
+  group_by(state,date) %>%
   summarize(sum_lightning = mean(sum_lightning))
 
 
-fir_model_train <- fir_model_clean %>% 
-  filter(date < "2019-01-01 00:00:00")
+# Create a train/test split 1-year out from the ened of the data
+lit_model_test <- lit_model_df %>% 
+  filter(date >= "2022-09-01 00:00:00")
 
-fir_model_test <- fir_model_clean %>% 
-  filter(date >= "2019-01-01 00:00:00")
+lit_model_df <- lit_model_df %>% 
+  filter(date < "2022-09-01 00:00:00")
 
-lit_model_train_nest <- lit_model_train %>%
+
+lit_model_train_nest <- lit_model_df %>%
   group_by(state) %>%
   nest()
 lit_model_train_nest
@@ -106,6 +108,12 @@ lit_model_fcast <- lit_model_fcast %>%
 
 lit_model_fcast <- lit_model_fcast %>% 
   rename("date" = "index")
+
+# For condensing the data to plot
+lit_plot_forecast_data_short <- lit_model_fcast %>%
+  group_by(state) %>%
+  summarize(lightning_forecast = sum(lightning_forecast))
+
 
 lit_model_test <- merge(x = lit_model_test, y = lit_model_fcast, by = c("state","date"), all.x = TRUE)
 

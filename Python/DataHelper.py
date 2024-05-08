@@ -13,7 +13,6 @@ import re # For file
 import os # For saving the file to a specific directory
 import sys # For taking variables from the command line
 import gzip # For unzipping gzip
-from DataHelper import *
 
 # import for counting the rows real quick
 import glob 

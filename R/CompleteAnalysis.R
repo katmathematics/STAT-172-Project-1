@@ -15,17 +15,24 @@ invisible(lapply(packages, library, character.only = TRUE))
 ### Examine the Data
 source("R/Model_Data_Examination/InterchangeAnalysis.R")
 source("R/Model_Data_Examination/LightningAnalysis.R")
+source("R/Model_Data_Examination/WildfireAnalysis.R")
 
 
 ### Run Interchange Prediction Models
 source("R/Models/InterchangeModelETS.R")
 source("R/Models/InterchangeModelLM.R")
+source("R/Models/InterchangeModelDecision.R")
 
 ### Run Lightning Prediction Models
 source("R/Models/LightningModelETS.R")
 source("R/Models/LightningModelLM.R")
+source("R/Models/LightningModelDecision.R")
+
 
 ### Run Wildfire Prediction Models
 source("R/Models/WildfireModelETS.R")
+source("R/Models/WildfireModelLM.R")
+source("R/Models/WildfireModelDecision.R")
 
 ### Complete Forecast Map
+source("R/Models/UnifiedModel.R")

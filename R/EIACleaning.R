@@ -13,7 +13,7 @@ raw_data <- list.files(path = "data/web_data/eia_data/interchange", pattern = "\
   bind_rows
 
 # Write the Appended Data
-#write.csv(raw_data, "data/compressed_raw_data/EIAInterchange.csv", row.names=FALSE, quote=FALSE)
+write.csv(raw_data, "data/compressed_raw_data/EIAInterchange.csv", row.names=FALSE, quote=FALSE)
 
 # Remove spaces from column name
 clean_data <- raw_data %>% 

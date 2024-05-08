@@ -1,6 +1,13 @@
-library(shiny)
-library(leaflet)
-library(maps)
+# Author(s) (ordered by contribution): Hming Zama
+
+# Install packages if not installed, then load packages
+packages <- c('shiny', 'leaflet','maps')
+installed_packages <- packages %in% rownames(installed.packages())
+if (any(installed_packages == FALSE)) {
+  install.packages(packages[!installed_packages])
+}
+invisible(lapply(packages, library, character.only = TRUE))
+
 
 #Load the dataset
 #demand <- read.csv("EIAInterchangeClean.csv")s

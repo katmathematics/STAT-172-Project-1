@@ -11,7 +11,7 @@ invisible(lapply(packages, library, character.only = TRUE))
 
 # Read in data
 complete_data = read.csv("data/model_data/ModelDataComplete.csv")
-complete_data = select(complete_data, -c("flag"))
+#complete_data = select(complete_data, -c("flag"))
 df <- complete_data
 
 # Read the data's date as a date
@@ -274,3 +274,7 @@ ggplot(plot_final_data, aes(map_id = state)) +
         axis.title.y=element_blank(),
         axis.text.y=element_blank(),
         axis.ticks.y=element_blank())
+
+
+# Write the Predictions
+write.csv(final_data, "data/prediction_data/UnifiedPredictions.csv", row.names=FALSE, quote=FALSE)

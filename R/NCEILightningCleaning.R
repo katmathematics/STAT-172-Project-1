@@ -65,5 +65,3 @@ combined_data = do.call(rbind, datalist)
 
 # Write the Compressed Data 
 write.csv(combined_data, "data/cleaned_data/NCEICountiesClean.csv", row.names=FALSE, quote=FALSE)
-
-

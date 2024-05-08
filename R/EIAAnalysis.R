@@ -23,7 +23,6 @@ avg_interchange_grouped_date <- avg_interchange_grouped
 avg_interchange_grouped_date$date <- format(as.Date(avg_interchange_grouped_date$"date", format =  "%b %Y"),"%y-%m")
 str(avg_interchange_grouped_date)
 
-# Most basic bubble plot
 p <- ggplot(avg_interchange_grouped_date, aes(x=date, y=mean_interchange, group=Region, color=Region)) +
   geom_line() + 
   xlab("Date") +
