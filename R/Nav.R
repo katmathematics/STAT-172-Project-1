@@ -8,6 +8,7 @@ if (any(installed_packages == FALSE)) {
 }
 invisible(lapply(packages, library, character.only = TRUE))
 
+
 #Load the dataset
 #demand <- read.csv("EIAInterchangeClean.csv")s
 #lightning <- read.csv("NCEICountiesClean.csv")

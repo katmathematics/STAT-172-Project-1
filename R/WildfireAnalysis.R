@@ -1,20 +1,12 @@
-rm(list = ls())
+# Author(s) (ordered by contribution): Hming Zama
 
-install.packages("ggfortify")
-
-library(DBI)
-library(RSQLite)
-library(dplyr)
-library(ggplot2)
-library(xts)
-library(ggfortify)  # For autoplot function
-library(sf)
-library(zoo)
-library(viridis) #color pallette
-library(maps)
-library(mapview)
-library(scales)
-
+# Install packages if not installed, then load packages
+packages <- c('RSQLite', 'DBI','dplyr','zoo','readr','ggplot2','xts','ggfortify','sf','viridis','maps','mapview','scales')
+installed_packages <- packages %in% rownames(installed.packages())
+if (any(installed_packages == FALSE)) {
+  install.packages(packages[!installed_packages])
+}
+invisible(lapply(packages, library, character.only = TRUE))
 
 #----Reading in the Data----
 #sqlite_file <- "FPA_FOD_20221014.sqlite"
@@ -68,6 +60,7 @@ for (col in names(na_values[na_values > 0])) {
   cat("Column:", col, "has", na_values[col], "NA values\n")
 }
 
+
 # Count the number of columns with NA values
 #Returns 17. There are 17 columns with NA values.
 num_cols_with_na <- sum(na_values > 0)
@@ -85,8 +78,13 @@ fires$MONTH <- format(fires$DISCOVERY_DATE, "%m")
 fires$YEAR <- format(fires$DISCOVERY_DATE, "%Y")
 
 #----Total Wildfires per State per Month----
+# Calculate monthly incident counts
+monthly_incident_counts <- fires %>%
+  group_by(STATE, MONTH) %>%
+  summarise(monthly_incident_count = n())
+
 # Convert MONTH to factor with month names as levels
-fires$MONTH <- factor(monthly_incident_counts$MONTH, levels = unique(monthly_incident_counts$MONTH), labels = month.abb)
+monthly_incident_counts$MONTH <- factor(monthly_incident_counts$MONTH, levels = unique(monthly_incident_counts$MONTH), labels = month.abb)
 
 # Plot the data
 ggplot(monthly_incident_counts, aes(x = MONTH, y = monthly_incident_count, fill = STATE)) +
@@ -189,7 +187,6 @@ filters <- list(
 
 # Plot the points using mapview with filters
 mapview(fires_sf, mapviewOptions = list(filters = filters))
-
 
 
 #---Last 5 years. Causes graph----
