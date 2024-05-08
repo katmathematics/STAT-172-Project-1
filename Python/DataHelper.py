@@ -20,11 +20,12 @@ import glob
 # Appends the desired directory to the filename
 def AppendDir(filename,directory="data\\web_data"):
     # Makes the directory to be written to if it doesn't already exist
-    if not os.path.exists(os.path.join(os.pardir, directory)):
-        os.makedirs(os.path.join(os.pardir, directory))
+    if not os.path.exists(os.path.join(directory)):
+        os.makedirs(os.path.join(directory))
+
 
     partial_loc = directory + "\\" + filename
-    full_loc = os.path.join(os.pardir, partial_loc)
+    full_loc = os.path.join(partial_loc)
     
     return full_loc
 
