@@ -106,7 +106,7 @@ ggplot(data=BPA_CSI_FREQ, aes(x=Cause, fill = DurationType)) +
   theme(axis.text.x = element_text(angle = 90, hjust=1)) + 
   labs(title = "Commonly Occuring Failure Causes") #+
   #facet_wrap(~O.MDistrict, ncol = 3)
-
+ggsave("data_visualizations/BPA_visualizations/Commonly_Occuring_Failure_Causes.png")
 
 # Get only uncommonly occurring problems
 BPA_CSI_UNC <- BPA_CSI %>%
@@ -120,8 +120,9 @@ ggplot(data=BPA_CSI_UNC, aes(x=Cause, fill = DurationType)) +
   geom_bar() +
   #geom_text(stat='count', aes(label=..count..), vjust=-1) + 
   theme(axis.text.x = element_text(angle = 90, hjust=1)) +
-  labs(title = "Uncommonly Occuring Failure Causes") #+ 
+  labs(title = "Uncommonly Occuring Failures Causes") #+ 
   #facet_wrap(~O.MDistrict, ncol = 3)
+ggsave("data_visualizations/BPA_visualizations/Uncommonly_Occuring_Failures_Causes.png")
 
 # Look only at outages lasting more than an hour
 BPA_CSI_SRS = BPA_CSI[!(BPA_CSI$DurationType %in% "Hour"),]
@@ -138,6 +139,7 @@ ggplot(data=BPA_CSI_FREQ_SRS, aes(x=Cause, fill = DurationType)) +
   theme(axis.text.x = element_text(angle = 90, hjust=1)) + 
   labs(title = "Commonly Occuring Failure Causes") +
   facet_wrap(~O.MDistrict, ncol = 3)
+ggsave("data_visualizations/BPA_visualizations/Commonly_Occuring_Failure_Causes.png")
 
 
 # Get only uncommonly occurring problems
@@ -154,6 +156,7 @@ ggplot(data=BPA_CSI_UNC_SRS, aes(x=Cause, fill = DurationType)) +
   theme(axis.text.x = element_text(angle = 90, hjust=1)) +
   labs(title = "Uncommonly Occuring Failure Causes") #+ 
   #facet_wrap(~O.MDistrict, ncol = 3)
+ggsave("data_visualizations/BPA_visualizations/Uncommonly_Occuring_Failure_Causes.png")
 
-ggsave("data_visualizations/BPA_visualizations/Uncommon_Severe_Failures_Visual.png")
 1
+
