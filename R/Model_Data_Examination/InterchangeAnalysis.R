@@ -24,10 +24,11 @@ avg_interchange_plot <- ggplot(interchange_mean_df, aes(x=date, y=mean_interchan
   geom_line() + 
   xlab("Date") +
   ylab("Avg. Interchange") +
-  labs(title = "Average Interchange in the US over time") +
+  labs(title = "Average Interchange in the US Over Time") +
   geom_smooth(method="lm", se=FALSE) +
   theme(axis.text.x = element_text(angle = 70, hjust=1))
 avg_interchange_plot
+ggsave("data_visualizations/EIA_visualizations/Average_Interchange_in_the_US_Over_Time.png")
 
 ## In-Demand/Excess Ratio Plot
 df_deficit_excess <- interchange_data %>%
@@ -46,6 +47,7 @@ deficit_excess_plot <- ggplot(df_deficit_excess) +
   guides(fill=guide_legend(title="Energy Needs")) +
   facet_wrap(~Region)
 deficit_excess_plot
+ggsave("data_visualizations/EIA_visualizations/Count_of_Months_of_Energy_Excess_or_Deficit_by_Region.png")
 
 ## Frequency distribution of mean interchange Plot
 freq_interchange_plot <- ggplot(interchange_mean_df, aes(x = mean_interchange)) +
@@ -54,5 +56,6 @@ freq_interchange_plot <- ggplot(interchange_mean_df, aes(x = mean_interchange)) 
   labs(title = "Frequency of Interchange in the US") +
   geom_histogram(color = "black", fill = "black")
 freq_interchange_plot
+ggsave("data_visualizations/EIA_visualizations/Frequency_ofInterchange_in_the_US.png")
 
 ## Time Series Decomposition
