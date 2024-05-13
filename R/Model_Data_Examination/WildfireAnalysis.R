@@ -20,7 +20,8 @@ sum_wildfires_plot <- ggplot(df_wildfires_sum, aes(x=date, y=sum_wildfires)) +
   geom_line() + 
   xlab("Date") +
   ylab("Total Wildfires") +
-  labs(title = "Wildfires in the US over time") +
+  labs(title = "Wildfires in the US Over Time") +
   geom_smooth(method="lm", se=FALSE) +
   theme(axis.text.x = element_text(angle = 70, hjust=1))
 sum_wildfires_plot
+ggsave("data_visualizations/Wildfire_visualizations/Wildfires_in_the_US_Over_Time.png")

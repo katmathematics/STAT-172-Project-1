@@ -25,3 +25,4 @@ sum_lightning_plot <- ggplot(df_lightning_sum, aes(x=date, y=sum_lightning)) +
   geom_smooth(method="lm", se=FALSE) +
   theme(axis.text.x = element_text(angle = 70, hjust=1))
 sum_lightning_plot
+ggsave("data_visualizations/NCEI_visualizations/Average_Interchange_in_the_US_Over_Time.png")
