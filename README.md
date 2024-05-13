@@ -19,8 +19,9 @@ After downloading this repository, the following instructions are designed to he
 
 ### Language Requirements
 The following languages are required to run this repository:
-- __R__ >= __4.4.0__
+- __R__ = __4.3.2__
     - If you don't already have RStudio installed, install the RStudio IDE to avoid having to reconfigure directory instructions
+    - This repository currently has a dependency on mapstools, which is not supported under R 4.4.0 or later. Please revert to an older version of R to run this project.
 - __Python__ >= __3.12.3__
 
 
