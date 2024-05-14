@@ -29,4 +29,3 @@ p <- ggplot(avg_interchange_grouped_date, aes(x=date, y=mean_interchange, group=
   theme(axis.text.x = element_text(angle = 90, hjust=1))
 p
 ggsave("data_visualizations/EIA_visualizations/p.png")
-1
