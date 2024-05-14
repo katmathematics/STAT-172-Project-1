@@ -162,11 +162,33 @@ int_plot_real_data_short <- int_plot_data %>%
   group_by(states_covered) %>%
   summarize(mean_interchange = mean(mean_interchange))
 
+# Get the max and min vals for the chloropeth plots (take whichever value from real/predicted is more extreme)
+max_val = max(int_plot_real_data_short$mean_interchange)
+if (max_val <  max(int_plot_forecast_data_short$mean_interchange)) {
+  max_val = max(int_plot_forecast_data_short$mean_interchange)
+}
+
+min_val = min(int_plot_real_data_short$mean_interchange)
+if (min_val > min(int_plot_forecast_data_short$mean_interchange)) {
+  min_val = min(int_plot_forecast_data_short$mean_interchange)
+}
+   
+max_val = ceiling(max_val)
+
+min_val = floor(min_val)
+
+interval = (abs(max_val) + abs(min_val)) / 3
+
+interval = ceiling(interval)
+
+# Find a good break interval for the plot
+
 # Plot the data
 states_map <- map_data("state")
-ggplot(int_plot_real_data_short, aes(map_id = states_covered)) + 
+interchange_real_plot <- ggplot(int_plot_real_data_short, aes(map_id = states_covered)) + 
   geom_map(aes(fill = mean_interchange), map = states_map) +
-  scale_fill_gradientn(colors=c("#000000","#0072B2")) + 
+  scale_fill_gradientn(colors=c("#CE0F0F","#09B91A")) + 
+  
   expand_limits(x = states_map$long, y = states_map$lat) + 
   borders("state", colour = "#222222") + 
   labs(fill='Excess/Deficit Energy', title = "Avg. Real Energy Demand (Feb 2023-Jan 2024)") +
@@ -177,12 +199,14 @@ ggplot(int_plot_real_data_short, aes(map_id = states_covered)) +
         axis.text.y=element_blank(),
         axis.ticks.y=element_blank())
   
+ggsave("data_visualizations/model_visualization/Mean_Interchange_Real.png", interchange_real_plot)
+  
 
 # Plot the data
 states_map <- map_data("state")
-ggplot(int_plot_forecast_data_short, aes(map_id = states_covered)) + 
+interchange_ETS_predictions_plot <- ggplot(int_plot_forecast_data_short, aes(map_id = states_covered)) + 
   geom_map(aes(fill = interchange_forecast), map = states_map) +
-  scale_fill_gradientn(colors=c("#000000","#0072B2")) + 
+  scale_fill_gradientn(colors=c("#CE0F0F","#09B91A")) + 
   expand_limits(x = states_map$long, y = states_map$lat) + 
   borders("state", colour = "#222222") + 
   labs(fill='Excess/Deficit Energy', title = "Avg. Predicted Energy Demand (Feb 2023-Jan 2024)") +
@@ -192,6 +216,23 @@ ggplot(int_plot_forecast_data_short, aes(map_id = states_covered)) +
         axis.title.y=element_blank(),
         axis.text.y=element_blank(),
         axis.ticks.y=element_blank())
+interchange_ETS_predictions_plot
+ggsave("data_visualizations/model_visualization/Mean_Interchange_ETS_Model_Predictions.png", interchange_ETS_predictions_plot)
+
+
+scatter_ets_real_vs_predicted <- ggplot(int_plot_real_data_short,                                     
+       aes(x = mean_interchange,
+           y = int_plot_forecast_data_short$interchange_forecast)) +
+  geom_point() +
+  xlab("Real Value") +
+  ylab("Predicted Value") +
+  labs(title = "Average Interchange Real vs Forecasted Value per Region") +
+  geom_abline(intercept = 0,
+              slope = 1,
+              color = "red",
+              size = 2)
+
+ggsave("data_visualizations/model_visualization/Mean_Interchange_ETS_Model_Real_vs_Predictions_ETS.png", scatter_ets_real_vs_predicted)
 
 # Write the Predictions
 write.csv(int_plot_data, "data/prediction_data/InterchangePredictionsETS.csv", row.names=FALSE, quote=FALSE)

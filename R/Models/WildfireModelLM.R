@@ -103,5 +103,21 @@ ggplot(fir_plot_forecast_data_short, aes(map_id = state)) +
         axis.text.y=element_blank(),
         axis.ticks.y=element_blank())
 
+
+scatter_lm_real_vs_predicted <- ggplot(fir_plot_real_data_short,                                     
+                                        aes(x = sum_wildfires,
+                                            y = fir_plot_forecast_data_short$wildfire_forecast)) +
+  geom_point() +
+  xlab("Real Value") +
+  ylab("Predicted Value") +
+  labs(title = "Total Wildfires Real vs Forecasted Value per State") +
+  geom_abline(intercept = 0,
+              slope = 1,
+              color = "red",
+              size = 2)
+scatter_lm_real_vs_predicted
+ggsave("data_visualizations/model_visualization/Sum_Wildfire_LM_Model_Real_vs_Predictions_ETS.png", scatter_lm_real_vs_predicted)
+
+
 # Write the Predictions
 write.csv(fir_plot_data_complete, "data/prediction_data/WildfirePredictionsLM.csv", row.names=FALSE, quote=FALSE)

@@ -143,7 +143,7 @@ lit_plot_real_data_short <- lit_model_test_complete %>%
 
 # Plot the data
 states_map <- map_data("state")
-ggplot(lit_plot_real_data_short, aes(map_id = state)) + 
+lightning_real_plot <- ggplot(lit_plot_real_data_short, aes(map_id = state)) + 
   geom_map(aes(fill = sum_lightning), map = states_map) +
   scale_fill_gradientn(colors=c("#0072B2","#000000")) + 
   expand_limits(x = states_map$long, y = states_map$lat) + 
@@ -155,11 +155,11 @@ ggplot(lit_plot_real_data_short, aes(map_id = state)) +
         axis.title.y=element_blank(),
         axis.text.y=element_blank(),
         axis.ticks.y=element_blank())
-
+ggsave("data_visualizations/model_visualization/Sum_Lightning_Real.png", lightning_real_plot)
 
 # Plot the data
 states_map <- map_data("state")
-ggplot(lit_plot_forecast_data_short, aes(map_id = state)) + 
+lightning_ETS_predictions_plot <- ggplot(lit_plot_forecast_data_short, aes(map_id = state)) + 
   geom_map(aes(fill = lightning_forecast), map = states_map) +
   scale_fill_gradientn(colors=c("#0072B2","#000000")) + 
   expand_limits(x = states_map$long, y = states_map$lat) + 
@@ -171,6 +171,24 @@ ggplot(lit_plot_forecast_data_short, aes(map_id = state)) +
         axis.title.y=element_blank(),
         axis.text.y=element_blank(),
         axis.ticks.y=element_blank())
+lightning_ETS_predictions_plot
+ggsave("data_visualizations/model_visualization/Sum_Lightning_ETS_Model_Predictions.png", lightning_ETS_predictions_plot)
+
+
+scatter_ets_real_vs_predicted <- ggplot(lit_plot_real_data_short,                                     
+                                        aes(x = sum_lightning,
+                                            y = lit_plot_forecast_data_short$lightning_forecast)) +
+  geom_point() +
+  xlab("Real Value") +
+  ylab("Predicted Value") +
+  labs(title = "Total Lightning Real vs Forecasted Value per State") +
+  geom_abline(intercept = 0,
+              slope = 1,
+              color = "red",
+              size = 2)
+scatter_ets_real_vs_predicted
+ggsave("data_visualizations/model_visualization/Sum_Lightning_ETS_Model_Real_vs_Predictions_ETS.png", scatter_ets_real_vs_predicted)
+
 
 # Write the Predictions
 write.csv(lit_model_test_complete, "data/prediction_data/LightningPredictionsETS.csv", row.names=FALSE, quote=FALSE)
