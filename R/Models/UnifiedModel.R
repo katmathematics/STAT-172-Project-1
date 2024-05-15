@@ -255,7 +255,7 @@ scaled_final_data <- final_data %>%
   add_column(state = final_data$state)
 scaled_final_data[is.na(scaled_final_data)] <- 0
 
-scaled_final_data$custom_metric <- with(scaled_final_data, -1*(-2*interchange_forecast + lightning_forecast + wildfire_forecast))
+scaled_final_data$custom_metric <- with(scaled_final_data, -1*(2*interchange_forecast + lightning_forecast + wildfire_forecast))
 
 plot_final_data = int_model_fcast = select(scaled_final_data, c("state","custom_metric"))
 
