@@ -3,10 +3,10 @@
 - ### Active Development Period: February 2024 - May 2024
 - ### Motivating Source: (STAT 190) Case Studies in Data Analytics as supervised by [Lendie R. Follett](https://www.drake.edu/zimpleman/about/facultystaff/facultybydepartment/lendierfollett/)
 
-![A visualization of the grid expansion desirability score of the contiguous United States. Noteable features are that Idaho, Wyoming, and Nevada are somewhat desirable for expansion, while Texas is exceptionally bad for expansion](https://github.com/katmathematics/STAT-190-Project-1/blob/main/data_visualizations/model_visualization/unified_model_forecast.png)
-
 ## Description
 One of the major problems facing energy companies is how to balance expanding their energy grid with the many risks that pose a threat to the grid. Across any region of interest for expansion is an existing pattern of demand for energy. However, there is also a complex system of threats to the grid, such as lightning and wildfires, that occur more or less frequently in certain locations. This project analyzes data regarding outages, energy demand, common risks to the energy grid from the contiguous United States and creates predictive models for discerning where in the future is likely to be low risk, high demand locations to put new grid resources
+
+![A visualization of the grid expansion desirability score of the contiguous United States. Noteable features are that Idaho, Wyoming, and Nevada are somewhat desirable for expansion, while Texas is exceptionally bad for expansion](https://github.com/katmathematics/STAT-190-Project-1/blob/main/data_visualizations/model_visualization/unified_model_forecast.png)
 
 ## Data Sets Used
 - [Bonneville Power Administration Outage Data](https://transmission.bpa.gov/Business/Operations/Outages/default.aspx)
